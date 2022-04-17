@@ -1,4 +1,3 @@
-import mimetypes
 from userform import UserForm
 from user import User
 from contentform import ContentForm
