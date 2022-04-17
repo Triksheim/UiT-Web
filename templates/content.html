@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class = "content">
+    {%if content%}
+        
+
+
+        
+        
+        {% if content.mimetype == 'image/jpeg' or  content.mimetype == 'image/jpg' or content.mimetype == 'image/png' or content.mimetype == 'image/gif'%}
+        <a href="{{url_for('download_content', id=content.contentID, _external=True) }}">
+        <img src="{{url_for('download_content', id=content.contentID, _external=True)}}" alt = "Bilde" /> </a> <br>
+        <h2>{{content.title}}</h2>
+
+        {% elif content.mimetype == 'video/mp4' or content.mimetype == 'video/webm' or content.mimetype == 'video/ogg' %}
+        <h2>{{content.title}}</h2>
+        <a href="{{url_for('download_content', id=content.contentID, _external=True) }}"></a>
+        <video width="100%" height="100%" controls>
+        <source src="{{url_for('download_content', id=content.contentID, _external=True)}}" type="{{content.mimetype}}">
+        </video> </a> <br>
+
+        {% else %}
+        <h2>{{content.title}}</h2>
+        
+        {% endif %}
+        <a href ="{{url_for('download_content', id=content.contentID, _external=True)}}">
+        <h4>Fil:{{ content.filename}} - Type:{{ content.mimetype}} - Size:{{ content.size}} bytes</h4> </a>
+
+        
+        
+
+        <h5>Beskrivelse: <br>
+        {{ content.description }}  </h5>
+
+        <h4>Dato: {{ content.date}} <br>
+        Lastet opp av: {{ content.users_username}} <br>
+        
+        {% if content.open == 1 %}
+            Synlighet: Alle <br>
+        {% else %}
+            Synlighet: Kun medlemmer <br>
+        {% endif %} 
+       
+        Visninger: {{content.views}} </h4>
+
+        <div class = "comments">
+        {% if current_user.is_authenticated %}
+            
+                <form action="{{url_for('add_comment', _external=True)}}" method="POST">
+                    {{  comment_form.text(rows="3", cols="50")  }}
+                    {% for error in comment_form.text.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                    <input type="hidden" id="contentID" name="contentID" value="{{ content.contentID }}">
+                    <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+                    <p>{{ comment_form.submit() }}</p>
+        {% endif %} 
+
+        {% if comments %}
+        <h5>Kommentarer</h5>
+            {% for comment in comments %}<li>
+                <p>{{comment.text}}</p> <h4>{{comment.users_username}} - {{comment.time}}</h4> </p>
+                </li>
+            {% endfor %}
+        {% endif %} 
+
+        </div>
+        
+    {% endif %}
+
+
+
+    {%if contents %}
+
+        {% for content in contents %}
+        
+            {% if content.mimetype == 'image/jpeg' or  content.mimetype == 'image/jpg' or content.mimetype == 'image/png' or content.mimetype == 'image/gif'%}
+            <div class = img_box>
+                <a href="{{url_for('content', id=content.contentID, _external=True) }}">  
+                <img src="{{url_for('download_content', id=content.contentID, _external=True)}}"/>
+                <h4>{{content.title}} - 
+                    {{content.date}} - {{content.users_username}}</h4>
+            </a>
+            </div>
+
+        
+            {% elif content.mimetype == 'video/mp4' or content.mimetype == 'video/webm' or content.mimetype == 'video/ogg' %}
+            <div class = vid_box> 
+                <a href="{{url_for('content', id=content.contentID, _external=True) }}">
+                <p>
+                <video width="100%" height="100%" controls>
+                <source src="{{url_for('download_content', id=content.contentID, _external=True)}}" type="{{content.mimetype}}"></video>
+                <h4>{{content.title}} <br>
+                    {{content.mimetype}} - {{content.date}} - {{content.users_username}}</h4>
+                </a> </p>
+            </div>
+
+            {% else %}
+            <div class = doc_box> 
+                <a href="{{url_for('content', id=content.contentID, _external=True)}}">
+
+
+
+                    --------------------------------------------------------
+
+                    <h2>{{content.title}}</h2>
+                    <h4>{{content.description}} <br>
+                    {{content.mimetype}} <br>
+                    {{content.date}} - {{content.users_username}}</h4>
+                    --------------------------------------------------------
+                </a>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+    <head>
+        <title>MiniUpload</title>
+        <link rel="stylesheet" href="static/cms.css" />
+     </head>
+    <body>
+
+        <div class="topbox">
+        <a href="{{url_for('front')}}"><h1>MiniUpload</h1> </a>
+
+        
+
+        {% if current_user.is_authenticated %}
+        <p>
+        <div class="logged_in">
+          Logget inn som {{ current_user.username }}
+        </p>
+        <form action="{{url_for('logout', _external=True)}}" method="post">
+          <input type="submit" name="logout" value="Logg ut">
+          <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+        </form>
+        
+        <div class="upload_btn">
+            <form action="{{url_for('select_file', _external=True)}}" method="get">
+                <input type="submit" name="upload" value="Last opp innhold"> <br>
+                <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+              </form>
+            </div>
+        </div>
+    {% else %}
+
+    <div class="login_area">
+        <div class="login">
+        <form action="{{url_for('login', _external=True)}}" method="post">
+          
+            Brukernavn: 
+              <input type="text" name="username">
+              
+            Passord: 
+              <input type="password" name="password" size="14">
+            </div>
+
+        <div class="login_btn">
+            <input type="submit" name="login" value="Logg inn">
+            <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+        </form>
+        </div>
+
+        <div class="new_btn">
+        <form action="{{url_for('register', _external=True)}}" method="get">
+            <input type="submit" name="Register" value="Registrer ny bruker"> <br>
+            <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+          </form>
+        </div>
+      </div>
+      
+        {% endif %}
+        <div class = 'category'>
+        <a href="{{url_for('content')}}"><h3>Alt</h3> </a>
+        <a href="{{url_for('pictures')}}"><h3>Bilder</h3> </a>
+        <a href="{{url_for('videos')}}"><h3>Video</h3> </a>
+        <a href="{{url_for('documents')}}"><h3>Dokumenter/Diverse</h3> </a>
+        
+
+        <div class = 'search'>
+          <form action="{{url_for('search', _external=True)}}" method="post">
+            <input type="text" name="search">
+            <input type="submit" name="search" value="Søk">
+            <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+        </div>
+      </div>
+
+
+    </div>
+    
+    {% if email %}
+      Epost for aktivering av brukerkonto er sendt til {{ email }} <br>
+      Du kan ikke logge inn før eposten er bekreftet.
+    {% endif %}
+
+    {% if activated %}
+      Brukerkontoen er aktivert. <br>
+      Du kan nå logge inn.
+    {% endif %}
+
+    {% block body %}
+    {% endblock %}
+    </body>
+</html>
