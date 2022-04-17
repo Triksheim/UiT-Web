@@ -2,23 +2,22 @@ body {
     background-color: rgb(196, 196, 196);
     color: black;
     font-family: 'Verdana', sans-serif;
-    margin: 0;
+    margin: 0em;
     
 }
 
 h1 {
     color: #212122;
     font-size: 2.0rem;
-    width: 10%;
     float: left;
-    margin: 1em
+    margin-left: 1em;
+    margin-top: 1em;
   }
   
   h2 {
     color: #212122;
     font-size: 2.0rem;
-    margin: 0em;
-    margin-top: 0em;
+   
   }
 
   h3 {
@@ -75,8 +74,6 @@ h1 {
     width: 100%;
     background: rgba(168, 150, 11, 0.295);
     margin: 0em;
-    margin-top: 0em;
-    margin-left: 0em;
     margin-right: 0em;
     float: left;  
 }
@@ -96,37 +93,35 @@ h1 {
 
 
 .login_area {
-    width: 18%;
-    margin: 0em;
-    margin-top: 0em;
-    margin-left: 0em;
-    margin-right: 0em;
+    width: 20%;
+    position: relative;
     float: right;  
+    
 }
 
 .login {
    
     float: left;
-    width: 5%;
+    width: 30%;
     margin-top: 2em;
     margin-right: 5em;
+    
 }
 
 .login_btn {
-  
-    float: right;
-    width: 1%;
-    margin-top: 5.75em;
-    margin-right: 16em;
+    float: left;
+    position: absolute;
+    margin-left: 10em;
+    bottom:0;
     
 }
 
 .new_btn {
-    
-    float: right;
-    width: 1%;
-    margin-top: 5.75em;
-    margin-right: -6em;  
+    float: left;
+    position: absolute;
+    margin-left: 15em;
+    bottom:0;
+     
 }
 
 .logged_in {
