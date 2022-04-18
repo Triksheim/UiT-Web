@@ -284,7 +284,7 @@ def content():
     else:
         try:      
             contents = get_all_content()
-            return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), id = id, contents = contents)
+            return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), contents = contents)
         except:
             return redirect(url_for('front', _external=True))
 
@@ -342,10 +342,21 @@ def documents():
     contents = get_content_by_type(mimetype)
     return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), contents = contents)
 
-# Search for content by text str
+# Search for content by text. Returns content with part of 'text' in title or tags. Or exact match for username
 @app.route('/search', methods=['POST'])
 def search():
-    search_word = request.form
+    search_form = SearchForm(request.form)
+    if search_form:
+        try:
+            text = search_form.search_text.data.lower()
+            all_contents = get_all_content()
+            found_content = []
+            for content in all_contents:
+                if text in content.tags.lower() or text in content.title.lower() or  text == content.users_username.lower():
+                    found_content.append(content)
+            return render_template('content.html', login_form = LoginForm(), search_form = search_form, contents = found_content)
+        except:
+            return redirect(url_for('front', _external=True))
     return redirect(url_for('front', _external=True))
 
 

@@ -64,9 +64,9 @@
 
         <div class = 'search'>
           <form action="{{url_for('search', _external=True)}}" method="post">
-            <input type="text" name="search">
-            <input type="submit" name="search" value="Søk">
             <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+            {{search_form.search_text}}
+            {{search_form.submit}}
         </div>
       </div>
 
