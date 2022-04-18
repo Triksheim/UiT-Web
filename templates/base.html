@@ -32,20 +32,19 @@
 
     <div class="login_area">
         <div class="login">
-        <form action="{{url_for('login', _external=True)}}" method="post">
-          
-            Brukernavn: 
-              <input type="text" name="username">
-              
-            Passord: 
-              <input type="password" name="password" size="14">
-            </div>
-
-        <div class="login_btn">
-            <input type="submit" name="login" value="Logg inn">
+        <form action="{{url_for('login', _external=True)}}" method="POST">
             <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
-        </form>
+            {{login_form.username.label}}
+            {{login_form.username}}
+
+            {{login_form.password.label}}
+            {{login_form.password}}
         </div>
+        <div class="login_btn">
+          {{login_form.submit}}
+        </div>
+        </form>
+        
 
         <div class="new_btn">
         <form action="{{url_for('register', _external=True)}}" method="get">
