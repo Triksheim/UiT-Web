@@ -27,7 +27,7 @@ csrf = CSRFProtect(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'webm', 'ogg', 'zip'}
+ALLOWED_EXTENSIONS = {'txt', 'docx', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'webm', 'ogg', 'zip', 'py'}
 
 # Checks if filename got valid extension. Copy from dte-2509-webapp-v22\file_upload\fileUpload_db.py
 def allowed_file(filename):
@@ -163,7 +163,7 @@ def register():
             print("failed sending mail")
             return redirect(url_for('front', _external=True))       
     else:   
-        return render_template('register.html', form = form)
+        return render_template('register.html', login_form = LoginForm(), search_form = SearchForm(), form = form)
 
 # Activates user account when id == user uuid
 @app.route('/activate', methods = ["GET"])
@@ -321,6 +321,16 @@ def add_comment():
     print("failed comment validate")
     return redirect(url_for('front', _external=True))
 
+# Deletes a comment *ADMIN ONLY*
+@app.route('/delete_comment', methods=['GET','POST'])
+@login_required
+def delete_comment():
+    id = request.args.get('id')
+    if current_user.username == 'admin' and id:
+        with MyDb() as db:
+            db.delete_comment((id,))
+    return redirect(url_for('front', _external=True))
+
 # Displays only images
 @app.route('/pictures', methods=['GET', 'POST'])
 def pictures():
@@ -335,11 +345,13 @@ def videos():
     contents = get_content_by_type(mimetype)
     return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), contents = contents)
 
-# Displays only docs/applications
+# Displays only docs/text/applications
 @app.route('/documents', methods=['GET', 'POST'])
 def documents():
-    mimetype = (('application%'),)
-    contents = get_content_by_type(mimetype)
+    contents = get_content_by_type((('application%'),))
+    contents2 = get_content_by_type((('text%'),))
+    for content in contents2:
+        contents.append(content)
     return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), contents = contents)
 
 # Search for content by text. Returns content with part of 'text' in title or tags. Or exact match for username

@@ -41,7 +41,7 @@
             {{login_form.password}}
         </div>
         <div class="login_btn">
-          {{login_form.submit}}
+          {{login_form.submit()}}
         </div>
         </form>
         
@@ -66,10 +66,10 @@
           <form action="{{url_for('search', _external=True)}}" method="post">
             <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
             {{search_form.search_text}}
-            {{search_form.submit}}
+            {{search_form.submit()}}
         </div>
+          </form>
       </div>
-
 
     </div>
     

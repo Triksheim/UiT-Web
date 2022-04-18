@@ -149,6 +149,16 @@ class MyDb:
             print(error)
             return error
 
+    def delete_comment(self, id):
+        try:
+            statement = """ DELETE FROM comments
+                            WHERE commentID = (%s)
+                        """
+            self.cursor.execute(statement, id)
+        except mysql.connector.Error as error:
+            print(error)
+            return error
+
     def get_comments_by_contentID (self, id):
         try:
             self.cursor.execute("SELECT * FROM comments WHERE content_contentID=(%s) ORDER BY time DESC", (id,))

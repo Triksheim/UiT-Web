@@ -9,8 +9,6 @@
         <form action="{{url_for('register', _external=True)}}" method="POST">
             <div class = "userform">
                 
-               
-
                 <div class = "brukernavn">
                     <br>
                     {{form.username.label}}<br>
@@ -63,7 +61,7 @@
                 {% endif %}
 
                 <br>
-                <p>{{ form.submit() }}</p> <br>
+                <p>{{ form.submit }}</p> <br>
             </div>
         </form>
                 
