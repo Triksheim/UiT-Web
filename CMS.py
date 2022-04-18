@@ -49,6 +49,29 @@ def send_mail(id, email):
     with app.app_context():
       mail.send(msg)
 
+def increment_views(id):
+    try:
+        with MyDb() as db:
+            db.add_view((id,)) 
+    except:
+        return
+
+def get_content_by_id(id):
+    if  current_user.is_active:
+        try:
+            with MyDb() as db:
+                content = Content(*db.get_content(id))
+            return content
+        except:
+            return 
+    else:
+        try:
+            with MyDb() as db:
+                content = Content(*db.get_open_content(id))
+            return content
+        except:
+            return 
+
 def get_content_by_type(mimetype):
     if current_user.is_active:
         try:      
@@ -67,6 +90,36 @@ def get_content_by_type(mimetype):
             return contents
         except:
             return ""
+
+# Returns all contents from db when logged in. Return all open contents when not logged in.
+def get_all_content():
+    if current_user.is_active:
+        try:      
+            with MyDb() as db:
+                result = db.get_all_content()
+                contents = [Content(*x) for x in result]
+            return contents
+        except:
+            return ""   
+    else:
+        try:      
+            with MyDb() as db:
+                result = db.get_all_open_content()
+                contents = [Content(*x) for x in result]
+            return contents
+        except:
+            return ""
+
+def get_comments_by_contentID(id):
+    try:
+        with MyDb() as db:
+            result = db.get_comments_by_contentID(id)
+            comments = [Comment(*x) for x in result]
+            return comments
+    except:
+        return ""
+
+
 
 @app.route('/', methods = ["GET", "POST"])
 def front():
@@ -206,43 +259,21 @@ def upload_file():
 @app.route('/content', methods=['GET', 'POST'])
 def content():
     id = request.args.get('id')
-    comment_form = CommentForm()
-    if  current_user.is_active and id:
+    if id:
         try:
-            with MyDb() as db:
-                db.add_view((id,))
-                content = Content(*db.get_content(id))
-            with MyDb() as db:
-                result = db.get_comments_by_contentID(id)
-                comments = [Comment(*x) for x in result]
-            return render_template('content.html', content = content, comment_form = comment_form, comments = comments)
-        except:
-            return redirect(url_for('front', _external=True))
-    elif id:
-        try:
-            with MyDb() as db:
-                db.add_view((id,))
-                content = Content(*db.get_open_content(id))
-            with MyDb() as db:
-                result = db.get_comments_by_contentID(id)
-                comments = [Comment(*x) for x in result]
-            return render_template('content.html', content = content, comments = comments)
+            content = get_content_by_id(id)
+            comments = get_comments_by_contentID(id)
+            increment_views(id)
+            if content:
+                return render_template('content.html', content = content, comments = comments, comment_form = CommentForm())
+            else:
+                return redirect(url_for('front', _external=True))
         except:
             return redirect(url_for('front', _external=True))
 
-    if current_user.is_active:
-        try:      
-            with MyDb() as db:
-                result = db.get_all_content()
-                contents = [Content(*x) for x in result]
-            return render_template('content.html', id = id, contents = contents)
-        except:
-            return redirect(url_for('front', _external=True))
     else:
         try:      
-            with MyDb() as db:
-                result = db.get_all_open_content()
-                contents = [Content(*x) for x in result]
+            contents = get_all_content()
             return render_template('content.html', id = id, contents = contents)
         except:
             return redirect(url_for('front', _external=True))

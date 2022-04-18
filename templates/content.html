@@ -102,14 +102,14 @@
                 <a href="{{url_for('content', id=content.contentID, _external=True)}}">
 
 
-
-                    --------------------------------------------------------
+                    
 
                     <h2>{{content.title}}</h2>
-                    <h4>{{content.description}} <br>
+                    <h4>--------------------------------------------------------
+                    {{content.description}} <br>
                     {{content.mimetype}} <br>
-                    {{content.date}} - {{content.users_username}}</h4>
-                    --------------------------------------------------------
+                    {{content.date}} - {{content.users_username}}
+                    --------------------------------------------------------</h4>
                 </a>
             </div>
             {% endif %}

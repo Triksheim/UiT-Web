@@ -17,6 +17,7 @@ h1 {
   h2 {
     color: #212122;
     font-size: 2.0rem;
+    display: inline;
    
   }
 
@@ -37,6 +38,7 @@ h1 {
   h5 {
     color: #212122;
     font-size: 1.2rem;
+    display: inline;
   }
 
   img {
@@ -50,7 +52,6 @@ h1 {
     height: 400px;
     float:left;
     text-align: center;
-    
 }
 
 .vid_box{
@@ -58,8 +59,7 @@ h1 {
     height: 390px;
     float:left;
     padding: 5px;
-    text-align: center;
-    
+    text-align: center;  
 }
 
 .doc_box{
@@ -68,7 +68,10 @@ h1 {
     float:left;
     white-space: pre-line;
     text-align: center;
+    display: inline-block;
+    
 }
+
 
 .topbox {
     width: 100%;
@@ -88,7 +91,7 @@ h1 {
 }
 
 .search {
-    padding-left: 16%;  
+    padding-left: 25em;  
 }
 
 
@@ -187,5 +190,5 @@ a:visited {
 a:hover {
     color: rgba(49, 49, 49, 0.822);
     background-color: transparent;
-    text-decoration: underline;
+    text-decoration: none;
 }
