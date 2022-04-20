@@ -61,6 +61,8 @@ class MyDb:
                 return error
 
 
+   
+
     def upload_content(self, content):
         try:
             statement = """ INSERT INTO content (contentID, code, title, description, date, tags, filename, mimetype, size, open, views, users_username)
@@ -70,6 +72,18 @@ class MyDb:
         except mysql.connector.Error as error:
                 print(error)
                 return error
+
+    def edit_content(self, edit):
+        try:
+            statement = """ UPDATE content
+                            SET title=%s, description=%s, tags=%s, open=%s
+                            WHERE contentID = %s
+                        """
+            self.cursor.execute(statement, edit)
+        except mysql.connector.Error as error:
+                print(error)
+                return error
+
 
     def get_content(self, id):
         try:
@@ -142,7 +156,7 @@ class MyDb:
     def add_new_comment(self, comment):
         try:
             statement = """ INSERT INTO comments (commentID, text, time, users_username, content_contentID)
-                            VALUES (NULL, %s, %s, %s, %s) 
+                            VALUES (%s, %s, %s, %s, %s) 
                         """
             self.cursor.execute(statement, comment)
         except mysql.connector.Error as error:
@@ -159,10 +173,18 @@ class MyDb:
             print(error)
             return error
 
-    def get_comments_by_contentID (self, id):
+    def get_comments_by_contentID(self, id):
         try:
             self.cursor.execute("SELECT * FROM comments WHERE content_contentID=(%s) ORDER BY time DESC", (id,))
             result = self.cursor.fetchall()
+        except mysql.connector.Error as error:
+            print(error)
+        return result
+
+    def get_comment_by_id(self, id):
+        try:
+            self.cursor.execute("SELECT * FROM comments WHERE commentID=(%s)", (id,))
+            result = self.cursor.fetchone()
         except mysql.connector.Error as error:
             print(error)
         return result

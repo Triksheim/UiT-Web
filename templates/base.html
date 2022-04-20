@@ -6,6 +6,18 @@
      </head>
     <body>
 
+      <!-- Script keeps scroll posision when reloading.
+      From stackoverflow: https://stackoverflow.com/questions/17642872/refresh-page-and-keep-scroll-position -->
+      <script>
+        document.addEventListener("DOMContentLoaded", function(event) { 
+            var scrollpos = localStorage.getItem('scrollpos');
+            if (scrollpos) window.scrollTo(0, scrollpos);
+        });
+        window.onbeforeunload = function(e) {
+            localStorage.setItem('scrollpos', window.scrollY);
+      }; 
+      </script>
+
         <div class="topbox">
         <a href="{{url_for('front')}}"><h1>MiniUpload</h1> </a>
 

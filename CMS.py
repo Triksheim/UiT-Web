@@ -1,3 +1,4 @@
+from pydoc import describe
 from CMSDB import MyDb
 from forms import UserForm, ContentForm, CommentForm, SearchForm, LoginForm
 from user import User
@@ -29,7 +30,8 @@ login_manager.init_app(app)
 
 ALLOWED_EXTENSIONS = {'txt', 'docx', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'webm', 'ogg', 'zip', 'py'}
 
-# Checks if filename got valid extension. Copy from dte-2509-webapp-v22\file_upload\fileUpload_db.py
+# Checks if filename got valid extension.
+# Copy from dte-2509-webapp-v22\file_upload\fileUpload_db.py
 def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -121,6 +123,15 @@ def get_comments_by_contentID(id):
             result = db.get_comments_by_contentID(id)
             comments = [Comment(*x) for x in result]
             return comments
+    except:
+        return ""
+
+# Returns comment by id
+def get_comment_by_id(id):
+    try:
+        with MyDb() as db:
+            comment = Comment(*db.get_comment_by_id(id))
+            return comment
     except:
         return ""
 
@@ -265,28 +276,73 @@ def upload_file():
     content_form.filedata_base64 = content_form.filedata_base64.data
     return render_template('upload.html', content = content_form, file = True)
 
-# Displays contents from db. Single content when id is given.
+# Edit content
+@app.route('/edit', methods=['POST'])
+@login_required
+def edit_content():
+    content_form = ContentForm(request.form)
+    content_form.owner = content_form.owner.data
+    if current_user.username == content_form.owner or current_user.username == 'admin':
+        content_form.filename = content_form.filename.data
+        content_form.mimetype = content_form.mimetype.data
+        content_form.size = content_form.size.data
+        content_form.contentID = content_form.contentID.data
+        return render_template('edit.html', search_form = SearchForm(), content = content_form)
+    return redirect(url_for('front', _external=True))
+
+# Edit content
+@app.route('/edit_insert', methods=['POST'])
+@login_required
+def insert_edit():
+    content_form = ContentForm(request.form)
+    if current_user.username == content_form.owner.data or current_user.username == 'admin':
+        if content_form.validate():
+            title = content_form.title.data
+            description = content_form.description.data
+            tags = content_form.tags.data
+            open = content_form.open.data
+            contentID = content_form.contentID.data
+            content_edit = (title, description, tags, open, contentID)
+            with MyDb() as db:
+                db.edit_content(content_edit)
+                return redirect(url_for('content', id=contentID, _external=True))
+        else:
+            content_form.filename = content_form.filename.data
+            content_form.mimetype = content_form.mimetype.data
+            content_form.size = content_form.size.data 
+            contentID = content_form.contentID.data 
+            content_form.owner = content_form.owner.data
+            return render_template('edit.html', search_form = SearchForm(), content = content_form)
+    return redirect(url_for('front', _external=True))
+
+# Displays a single content when id is given. Else shows all contents.
 @app.route('/content', methods=['GET', 'POST'])
 def content():
     id = request.args.get('id')
+    delete_commentID = request.args.get('delete_commentID')
     if id:
         try:
             increment_views(id)
             content = get_content_by_id(id)
             comments = get_comments_by_contentID(id)
             if content:
-                return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), content = content, comments = comments, comment_form = CommentForm())
+                return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), content = content,
+                    comments = comments, comment_form = CommentForm(), delete_commentID = delete_commentID, content_form = ContentForm())
             else:
+                print("no content")
                 return redirect(url_for('front', _external=True))
         except:
-            return redirect(url_for('front', _external=True))
-
+            print("failed loading content")
+            return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), content = content,
+                    comments = comments, comment_form = CommentForm(), delete_commentID = delete_commentID)
     else:
         try:      
             contents = get_all_content()
             return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), contents = contents)
         except:
             return redirect(url_for('front', _external=True))
+
+
 
 # Downloads content by id to display in browser using make_response.
 @app.route('/download/<id>', methods=['GET', 'POST'])
@@ -307,11 +363,12 @@ def download_content(id):
 def add_comment():
     comment_form = CommentForm(request.form)
     if comment_form.validate():
+        commentID = str(uuid.uuid1())
         text = comment_form.text.data
         time = datetime.now()
         user = current_user.username
         contentID = comment_form.contentID.data
-        comment = (text, time, user, contentID)
+        comment = (commentID,text, time, user, contentID)
         try:
             with MyDb() as db:
                 db.add_new_comment(comment)
@@ -321,14 +378,22 @@ def add_comment():
     print("failed comment validate")
     return redirect(url_for('front', _external=True))
 
-# Deletes a comment *ADMIN ONLY*
+# Deletes a comment
 @app.route('/delete_comment', methods=['GET','POST'])
 @login_required
 def delete_comment():
     id = request.args.get('id')
-    if current_user.username == 'admin' and id:
-        with MyDb() as db:
-            db.delete_comment((id,))
+    contentID = request.args.get('contentID')
+    
+    if id:
+        try:
+            comment = get_comment_by_id(id)
+            if current_user.username == 'admin' or current_user.username == comment.users_username:
+                with MyDb() as db:
+                    db.delete_comment((id,))
+                    return redirect(url_for('content', id=contentID, _external=True))
+        except:
+            return redirect(url_for('front', _external=True))
     return redirect(url_for('front', _external=True))
 
 # Displays only images

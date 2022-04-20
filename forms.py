@@ -32,9 +32,12 @@ class ContentForm(Form):
     mimetype = HiddenField()
     size = HiddenField()
     date = HiddenField()
+    contentID = HiddenField()
+    owner = HiddenField()
 
     submit_next = SubmitField('Neste')
     submit = SubmitField('Last opp')
+    submit_edit = SubmitField('Rediger')
 
 class CommentForm(Form):
     text = TextAreaField('Kommentar', validators= [DataRequired(), Length(max=500)])
