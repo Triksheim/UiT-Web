@@ -60,7 +60,7 @@ def increment_views(id):
     except:
         return
 
-# Returns content from db by ContentID. Returns only open content when not logged in.
+# Returns content from db by ContentID.
 def get_content_by_id(id):
     if current_user.is_active:
         restriction = 'members'
@@ -73,7 +73,7 @@ def get_content_by_id(id):
     except:
         return 
         
-# Returns all contents from db by mimetype. Returns only open contents when not logged in.
+# Returns all contents from db by mimetype. 
 def get_content_by_type(mimetype):
     if current_user.is_active:
         restriction = 'members'
@@ -92,7 +92,7 @@ def get_content_by_type(mimetype):
     except:
         return ""
    
-# Returns all contents from db by mimetype. Returns only open contents when not logged in.
+# Returns all contents from db by mimetype ordered by a column.
 def get_content_by_type_ordered(mimetype, column):
     if current_user.is_active:
         restriction = 'members'
@@ -117,7 +117,7 @@ def get_content_by_type_ordered(mimetype, column):
     except:
         return ""
 
-# Returns all contents from db when logged in. Return all open contents when not logged in.
+# Returns all contents from db.
 def get_all_content():
     if current_user.is_active:
         restriction = 'members'
@@ -131,7 +131,7 @@ def get_all_content():
     except:
         return ""   
    
-# Returns all contents ordered by a column
+# Returns all contents ordered by a column.
 def get_all_content_ordered(column):
     if current_user.is_active:
         restriction = 'members'
@@ -266,17 +266,17 @@ def select_file():
             content_form.mimetype = file.mimetype
             content_form.filedata = file.read()
             content_form.size = len(content_form.filedata)
-            content_form.filedata_base64 = ""
+            content_form.filedata_base64 = None
             if 'image' in file.mimetype:
                 filedata_base64 = base64.b64encode(content_form.filedata)
                 content_form.filedata_base64 = filedata_base64.decode('utf-8')
-            return render_template('upload.html', login_form = LoginForm(), search_form = SearchForm(), content = content_form, file = file)
+            return render_template('upload.html', login_form = LoginForm(), search_form = SearchForm(), content = content_form, file = True)
         else:
             return render_template('upload.html', login_form = LoginForm(), search_form = SearchForm(), content = content_form, invalid_file = True)
     else:
         return render_template('upload.html', login_form = LoginForm(), search_form = SearchForm(), content = content_form, file = is_file_selected)
     
-# Adds content to db if form validated
+# Adds content to db if form is validated
 @app.route('/uploading', methods=['GET', 'POST'])
 @login_required
 def upload_file():
@@ -322,7 +322,7 @@ def edit_content():
         return render_template('edit.html', search_form = SearchForm(), content = content_form)
     return redirect(url_for('front', _external=True))
 
-# Update content details in db
+# Update content details in db if form is validated
 @app.route('/edit_update', methods=['POST'])
 @login_required
 def edit_update():
@@ -379,8 +379,6 @@ def content():
         except:
             return redirect(url_for('front', _external=True))
 
-
-
 # Downloads content by id to display in browser using make_response.
 @app.route('/download/<id>', methods=['GET', 'POST'])
 def download_content(id):
@@ -395,7 +393,7 @@ def download_content(id):
             return redirect(url_for('front', _external=True))
     return redirect(url_for('front', _external=True))
     
-# Adds comment linked to contentID to db.
+# Adds comment linked to contentID to db when form is validated
 @app.route('/comment', methods=['POST'])
 def add_comment():
     comment_form = CommentForm(request.form)
@@ -421,7 +419,6 @@ def add_comment():
 def delete_comment():
     id = request.args.get('id')
     contentID = request.args.get('contentID')
-    
     if id:
         try:
             comment = get_comment_by_id(id)

@@ -14,7 +14,6 @@ class UserForm(Form):
     password = PasswordField('Password', validators=[DataRequired(), Length(max=45)])
     firstname = StringField('First Name', [DataRequired(), Length(max=45)])
     lastname = StringField('Last Name', [DataRequired(), Length(max=45)])
-
     submit = SubmitField('Registrer')
     
 
@@ -25,7 +24,6 @@ class ContentForm(Form):
     restriction = StringField('restriction', validators= [DataRequired()])
     
     file = FileField('File')
-
     filename = HiddenField()
     filedata = HiddenField()
     filedata_base64 = HiddenField()

@@ -1,6 +1,5 @@
 import mysql.connector
 
-
 class MyDb:
 
     def __init__(self) -> None:
@@ -25,7 +24,6 @@ class MyDb:
         result = self.cursor.fetchall()
         return result
 
-    
     def add_new_user(self, user):
         try:
             statement = """ INSERT INTO users (username, email, password, firstname, lastname, uuid, activated)
@@ -60,10 +58,10 @@ class MyDb:
                 print(error)
                 return error
 
-
     def upload_content(self, content):
         try:
-            statement = """ INSERT INTO content (contentID, code, title, description, date, tags, filename, mimetype, size, restriction, views, users_username)
+            statement = """ INSERT INTO content 
+                            (contentID, code, title, description, date, tags, filename, mimetype, size, restriction, views, users_username)
                             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s) 
                         """
             self.cursor.execute(statement, content)
@@ -82,7 +80,6 @@ class MyDb:
                 print(error)
                 return error
 
-
     def get_content(self, id, restriction):
         try:
             statement = """
@@ -97,7 +94,6 @@ class MyDb:
         except mysql.connector.Error as error:
             print(error)
         return result
-
 
     def get_all_content(self, restriction):
         try:
@@ -114,7 +110,6 @@ class MyDb:
             print(error)
         return result
 
-
     def get_all_content_order_views(self, restriction):
         try:
             statement = """ SELECT *
@@ -129,7 +124,6 @@ class MyDb:
             print(error)
         return result
 
-    
     def get_all_content_by_type(self, mimetype, restriction):
         try:
             statement = """
@@ -190,7 +184,6 @@ class MyDb:
             print(error)
         return result
 
-
     def add_view(self, id):
         try:
             statement1 = """SELECT views
@@ -225,7 +218,8 @@ class MyDb:
             statement = """ DELETE FROM comments
                             WHERE commentID = (%s)
                         """
-            self.cursor.execute(statement, id)
+            parameters = (id,)
+            self.cursor.execute(statement, parameters)
         except mysql.connector.Error as error:
             print(error)
             return error

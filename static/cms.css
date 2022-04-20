@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(196, 196, 196);
+    background-color: rgb(218, 218, 218);
     color: black;
     font-family: 'Verdana', sans-serif;
     margin: 0em; 
@@ -8,9 +8,6 @@ body {
 h1 {
     color: #212122;
     font-size: 2.0rem;
-    float: left;
-    margin-left: 1em;
-    margin-top: 1em;
   }
   
   h2 {
@@ -44,12 +41,6 @@ h1 {
     display: inline;
   }
 
-  h7 {
-    color: #212122;
-    font-size: 1rem;
-    white-space: pre-line;
-  }
-
   img {
     width: 400px;
     height: 300px;
@@ -57,14 +48,14 @@ h1 {
   }
 
 .img_box{
-    width: 500px;
+    width: 450px;
     height: 400px;
     float:left;
     text-align: center;
 }
 
 .vid_box{
-    width: 490px;
+    width: 440px;
     height: 390px;
     float:left;
     padding: 5px;
@@ -72,7 +63,7 @@ h1 {
 }
 
 .doc_box{
-    width: 500px;
+    width: 450px;
     height: 400px;
     float:left;
     white-space: pre-line;
@@ -82,19 +73,23 @@ h1 {
 
 .topbox {
     width: 100%;
-    background: rgba(168, 150, 11, 0.295);
+    background: rgba(11, 92, 168, 0.178);
     margin: 0em;
     margin-right: 0em;
     float: left;  
+    position: relative;
+}
+
+.title {
+    width: 22%;
+    margin-left: 1em;
+    margin-top: 1em;
+    float: left;    
 }
 
 .category {
-    width: 100%;
-    margin: 0em;
-    margin-top: 0em;
-    margin-left: 1em;
-    margin-right: 0em;
-    float: left;  
+    width: 70%;
+    float: left;    
 }
 
 .search {
@@ -107,31 +102,31 @@ h1 {
 
 .login_area {
     width: 20%;
-    position: relative;
     float: right;   
 }
 
 .login {
-    float: left;
-    width: 30%;
-    margin-top: 2em;
-    margin-right: 5em; 
+    width: 50%;
+    margin-top: 0em;
+    margin-right: 0em; 
+}
+
+.buttons{
 }
 
 .login_btn {
-    float: left;
-    position: absolute;
-    margin-left: 10em;
-    bottom:0; 
+    width: 10%;
+    float:left;  
+    padding-top: 0.5em;
 }
 
 .new_btn {
-    float: left;
-    position: absolute;
-    margin-left: 15em;
-    bottom:0;   
+    float:left;
+    width: 10%;
+    padding-left: 3em;
+    padding-top: 0.5em;
 }
-
+    
 .logged_in {
     float: right;
     width: 10%;
@@ -143,20 +138,31 @@ h1 {
  }
 
 .register_user {
+    padding-top: 10em;
     margin-left: 5em;
 }
 
 .upload {   
-   margin-left: 10em;
+    padding-top: 10em;
+    margin-left: 10em;
 }
 
 .content {
     object-fit: cover; 
-    padding: 5%
+    padding: 1%
  }
 
  .content li {
     list-style-type: none;
+ }
+
+ .single_content {
+     
+    padding-top: 8em;
+    margin-left: 5em;
+ }
+
+ .videoplayer {
  }
 
  .comments li{
@@ -164,7 +170,6 @@ h1 {
     width: 40%;
     border-bottom: 2px dotted #0b090c;
  }
-
 
 a:link {
     color: rgb(0, 0, 0);

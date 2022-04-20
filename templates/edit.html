@@ -44,26 +44,15 @@
       <span style="color: red;">[{{ error }}]</span>
       {% endfor %}
 
-
-      
-      
       <input type="hidden" id="filename" name="filename" value="{{ content.filename }}">
       <input type="hidden" id="mimetype" name="mimetype" value="{{ content.mimetype }}">
       <input type="hidden" id="size" name="size" value="{{ content.size }}">
       <input type="hidden" id="contentID" name="contentID" value="{{ content.contentID }}">
       <input type="hidden" id="owner" name="owner" value="{{ content.owner }}">
-
       <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
-
-
       <p>{{ content.submit_edit }}</p> <br>
-      
     </form>
     
-    
-    
-
-
   {% else %}
         <h2>Not logged in</h2>
   {% endif %}

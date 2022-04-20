@@ -4,8 +4,8 @@
         <title>MiniUpload</title>
         <link rel="stylesheet" href="static/cms.css" />
      </head>
-    <body>
 
+    <body>
       <!-- Script keeps scroll posision when reloading.
       From stackoverflow: https://stackoverflow.com/questions/17642872/refresh-page-and-keep-scroll-position -->
       <script>
@@ -18,84 +18,84 @@
       }; 
       </script>
 
-        <div class="topbox">
-        <a href="{{url_for('front')}}"><h1>MiniUpload</h1> </a>
-
+      <div class="topbox">
+        <div class="title">
+          <a href="{{url_for('front')}}"><h1>MiniUpload</h1> </a>
+        </div>
         
-
         {% if current_user.is_authenticated %}
-        <p>
-        <div class="logged_in">
-          Logget inn som {{ current_user.username }}
-        </p>
-        <form action="{{url_for('logout', _external=True)}}" method="post">
-          <input type="submit" name="logout" value="Logg ut">
-          <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
-        </form>
-        
-        <div class="upload_btn">
-            <form action="{{url_for('select_file', _external=True)}}" method="get">
-                <input type="submit" name="upload" value="Last opp innhold"> <br>
-                <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
-              </form>
+          <p>
+          <div class="logged_in">
+            Logget inn som {{ current_user.username }}
+            </p>
+            <form action="{{url_for('logout', _external=True)}}" method="post">
+              <input type="submit" name="logout" value="Logg ut">
+              <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+            </form>
+          
+            <div class="upload_btn">
+              <form action="{{url_for('select_file', _external=True)}}" method="get">
+                  <input type="submit" name="upload" value="Last opp innhold"> <br>
+                  <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+                </form>
             </div>
-        </div>
-    {% else %}
+          </div>
 
-    <div class="login_area">
-        <div class="login">
-        <form action="{{url_for('login', _external=True)}}" method="POST">
-            <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
-            {{login_form.username.label}}
-            {{login_form.username}}
+        {% else %}
+          <div class="login_area">
+            <div class="login">
+              <form action="{{url_for('login', _external=True)}}" method="POST">
+                  <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+                  {{login_form.username.label}}
+                  {{login_form.username}}
 
-            {{login_form.password.label}}
-            {{login_form.password}}
-        </div>
-        <div class="login_btn">
-          {{login_form.submit()}}
-        </div>
-        </form>
-        
-
-        <div class="new_btn">
-        <form action="{{url_for('register', _external=True)}}" method="get">
-            <input type="submit" name="Register" value="Registrer ny bruker"> <br>
-            <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
-          </form>
-        </div>
-      </div>
-      
+                  {{login_form.password.label}}
+                  {{login_form.password}}
+            </div>
+                <div class="buttons">
+                  <div class="login_btn">
+                    {{login_form.submit()}}
+                  </div>
+                </form>
+              
+              <div class="new_btn">
+                <form action="{{url_for('register', _external=True)}}" method="get">
+                  <input type="submit" name="Register" value="Registrer"> <br>
+                  <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+                </form>
+              </div>
+            </div>
+            </div>
         {% endif %}
+
         <div class = 'category'>
-        <a href="{{url_for('content')}}"><h3>Alle</h3> </a>
-        <a href="{{url_for('pictures')}}"><h3>Bilder</h3> </a>
-        <a href="{{url_for('videos')}}"><h3>Video</h3> </a>
-        <a href="{{url_for('documents')}}"><h3>Dokumenter og filer</h3> </a>
-        
-
-        <div class = 'search'>
-          <form action="{{url_for('search', _external=True)}}" method="post">
-            <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
-            {{search_form.search_text}}
-            {{search_form.submit()}}
+          <a href="{{url_for('content')}}"><h3>Alle</h3> </a>
+          <a href="{{url_for('pictures')}}"><h3>Bilder</h3> </a>
+          <a href="{{url_for('videos')}}"><h3>Video</h3> </a>
+          <a href="{{url_for('documents')}}"><h3>Dokumenter og filer</h3> </a>
+          
+          <div class = 'search'>
+            <form action="{{url_for('search', _external=True)}}" method="post">
+              <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+              {{search_form.search_text}}
+              {{search_form.submit()}}
+          </div>
+            </form>
         </div>
-          </form>
+
       </div>
-
-    </div>
     
-    {% if email %}
-      Epost for aktivering av brukerkonto er sendt til {{ email }} <br>
-      Du kan ikke logge inn før eposten er bekreftet.
-    {% endif %}
+      {% if email %}
+        Epost for aktivering av brukerkonto er sendt til {{ email }} <br>
+        Du kan ikke logge inn før eposten er bekreftet.
+      {% endif %}
 
-    {% if activated %}
-      Brukerkontoen er aktivert. <br>
-      Du kan nå logge inn.
-    {% endif %}
+      {% if activated %}
+        Brukerkontoen er aktivert. <br>
+        Du kan nå logge inn.
+      {% endif %}
 
-    {% block body %}
-    {% endblock %}
+      {% block body %}
+      {% endblock %}
     </body>
 </html>
