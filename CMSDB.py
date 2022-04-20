@@ -26,7 +26,6 @@ class MyDb:
         return result
 
     
-
     def add_new_user(self, user):
         try:
             statement = """ INSERT INTO users (username, email, password, firstname, lastname, uuid, activated)
@@ -43,7 +42,8 @@ class MyDb:
                             FROM users 
                             WHERE username=(%s)
                         """
-            self.cursor.execute(statement, username)
+            parameters = (username,)
+            self.cursor.execute(statement, parameters)
             result = self.cursor.fetchone()
             return result
         except mysql.connector.Error as err:
@@ -61,11 +61,9 @@ class MyDb:
                 return error
 
 
-   
-
     def upload_content(self, content):
         try:
-            statement = """ INSERT INTO content (contentID, code, title, description, date, tags, filename, mimetype, size, open, views, users_username)
+            statement = """ INSERT INTO content (contentID, code, title, description, date, tags, filename, mimetype, size, restriction, views, users_username)
                             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s) 
                         """
             self.cursor.execute(statement, content)
@@ -76,7 +74,7 @@ class MyDb:
     def edit_content(self, edit):
         try:
             statement = """ UPDATE content
-                            SET title=%s, description=%s, tags=%s, open=%s
+                            SET title=%s, description=%s, tags=%s, restriction=%s
                             WHERE contentID = %s
                         """
             self.cursor.execute(statement, edit)
@@ -85,49 +83,108 @@ class MyDb:
                 return error
 
 
-    def get_content(self, id):
+    def get_content(self, id, restriction):
         try:
-            self.cursor.execute("SELECT * FROM content WHERE contentID=(%s)", (id,))
+            statement = """
+                            SELECT * 
+                            FROM content 
+                            WHERE contentID=%s AND (restriction='open' OR restriction=%s)
+                            ORDER BY date DESC
+                        """
+            parameters = (id, restriction)
+            self.cursor.execute(statement, parameters)
             result = self.cursor.fetchone()
         except mysql.connector.Error as error:
             print(error)
         return result
 
-    def get_open_content(self, id):
-        try:
-            self.cursor.execute("SELECT * FROM content WHERE contentID=(%s) AND open=(%s)", (id,1))
-            result = self.cursor.fetchone()
-        except mysql.connector.Error as error:
-            print(error)
-        return result
 
-    def get_all_content(self):
+    def get_all_content(self, restriction):
         try:
-            self.cursor.execute("SELECT * FROM content")
+            statement = """
+                            SELECT * 
+                            FROM content 
+                            WHERE restriction='open' OR restriction=%s
+                            ORDER BY date DESC
+                        """
+            parameters = (restriction,)
+            self.cursor.execute(statement, parameters)
             result = self.cursor.fetchall()
         except mysql.connector.Error as error:
             print(error)
         return result
 
-    def get_all_open_content(self):
+
+    def get_all_content_order_views(self, restriction):
         try:
-            self.cursor.execute("SELECT * FROM content WHERE open=(%s)", (1,))
+            statement = """ SELECT *
+                            FROM content
+                            WHERE restriction='open' OR restriction=%s
+                            ORDER BY views DESC;
+                        """
+            parameters = (restriction,)
+            self.cursor.execute(statement, parameters)
             result = self.cursor.fetchall()
         except mysql.connector.Error as error:
             print(error)
         return result
 
-    def get_all_content_by_type(self, type):
+    
+    def get_all_content_by_type(self, mimetype, restriction):
         try:
-            self.cursor.execute("SELECT * FROM content WHERE mimetype like (%s)", (type))
+            statement = """
+                            SELECT * 
+                            FROM content 
+                            WHERE mimetype like %s AND (restriction='open' OR restriction=%s)
+                            ORDER BY date DESC
+                        """
+            parameters = (mimetype, restriction)
+            self.cursor.execute(statement, parameters)
             result = self.cursor.fetchall()
         except mysql.connector.Error as error:
             print(error)
         return result
 
-    def get_all_open_content_by_type(self, type):
+    def get_all_content_by_type_docs(self, mimetype, restriction):
         try:
-            self.cursor.execute("SELECT * FROM content WHERE mimetype like (%s) and open=1", (type))
+            statement = """
+                            SELECT * 
+                            FROM content 
+                            WHERE (mimetype like %s OR mimetype like %s) AND (restriction='open' OR restriction=%s)
+                            ORDER BY date DESC
+                        """
+            parameters = (mimetype[0], mimetype[1], restriction)
+            self.cursor.execute(statement, parameters)
+            result = self.cursor.fetchall()
+        except mysql.connector.Error as error:
+            print(error)
+        return result
+
+    def get_all_content_by_type_order_views(self, mimetype, restriction):
+        try:
+            statement = """
+                            SELECT * 
+                            FROM content 
+                            WHERE mimetype like %s AND (restriction='open' OR restriction=%s)
+                            ORDER BY views DESC
+                        """
+            parameters = (mimetype, restriction)
+            self.cursor.execute(statement, parameters)
+            result = self.cursor.fetchall()
+        except mysql.connector.Error as error:
+            print(error)
+        return result
+
+    def get_all_content_by_type_order_views_docs(self, mimetype, restriction):
+        try:
+            statement = """
+                            SELECT * 
+                            FROM content 
+                            WHERE (mimetype like %s OR mimetype like %s) AND (restriction='open' OR restriction=%s)
+                            ORDER BY views DESC
+                        """
+            parameters = (mimetype[0], mimetype[1], restriction)
+            self.cursor.execute(statement, parameters)
             result = self.cursor.fetchall()
         except mysql.connector.Error as error:
             print(error)
@@ -140,16 +197,16 @@ class MyDb:
                             FROM content
                             WHERE contentID=%s
                         """
-            self.cursor.execute(statement1, id)
-
+            parameters = (id,)
+            self.cursor.execute(statement1, parameters)
             views = self.cursor.fetchone()
-            updated_views = (views[0]+1, id[0])
-
+            
             statement2 = """UPDATE content
                             SET views=%s
                             WHERE contentID=%s 
                         """
-            self.cursor.execute(statement2, updated_views)    
+            parameters2 = (views[0]+1, id)
+            self.cursor.execute(statement2, parameters2)    
         except mysql.connector.Error as error:
                 print(error)
 
@@ -175,7 +232,13 @@ class MyDb:
 
     def get_comments_by_contentID(self, id):
         try:
-            self.cursor.execute("SELECT * FROM comments WHERE content_contentID=(%s) ORDER BY time DESC", (id,))
+            statement = """ SELECT * 
+                            FROM comments 
+                            WHERE content_contentID=(%s) 
+                            ORDER BY time DESC
+                        """
+            parameters = (id,)
+            self.cursor.execute(statement, parameters)
             result = self.cursor.fetchall()
         except mysql.connector.Error as error:
             print(error)
@@ -183,7 +246,12 @@ class MyDb:
 
     def get_comment_by_id(self, id):
         try:
-            self.cursor.execute("SELECT * FROM comments WHERE commentID=(%s)", (id,))
+            statement = """ SELECT * 
+                            FROM comments 
+                            WHERE commentID=(%s)
+                        """
+            parameters = (id,)
+            self.cursor.execute(statement, parameters)
             result = self.cursor.fetchone()
         except mysql.connector.Error as error:
             print(error)

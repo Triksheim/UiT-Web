@@ -36,12 +36,11 @@
 
       <br>
       Tilgjengelighet <br>
-      <select name="open">
-        <option value=1>For alle</option>
-        <option value=2>Kun medlemmer</option>
-        <option value=5>feil</option>
+      <select name="restriction">
+        <option value=open>For alle</option>
+        <option value=members>Kun medlemmer</option>
       </select> <br>
-      {% for error in content.open.errors %}
+      {% for error in content.restriction.errors %}
       <span style="color: red;">[{{ error }}]</span>
       {% endfor %}
 

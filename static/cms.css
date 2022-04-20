@@ -2,14 +2,8 @@ body {
     background-color: rgb(196, 196, 196);
     color: black;
     font-family: 'Verdana', sans-serif;
-    margin: 0em;
-    
+    margin: 0em; 
 }
-
-.text{
-
-    white-space: pre-line;
-} 
 
 h1 {
     color: #212122;
@@ -23,7 +17,6 @@ h1 {
     color: #212122;
     font-size: 2.0rem;
     display: inline;
-   
   }
 
   h3 {
@@ -31,14 +24,12 @@ h1 {
     font-size: 1.0rem;
     margin-left: 1em;
     margin-top: 0em;
-    
     float: left;
   }
 
   h4 {
     color: #212122;
-    font-size: 0.8rem;
-    
+    font-size: 0.8rem;  
   }
 
   h5 {
@@ -86,10 +77,8 @@ h1 {
     float:left;
     white-space: pre-line;
     text-align: center;
-    display: inline-block;
-    
+    display: inline-block; 
 }
-
 
 .topbox {
     width: 100%;
@@ -112,71 +101,57 @@ h1 {
     padding-left: 25em;  
 }
 
+.sort {
+    margin-top: 3em
+}
 
 .login_area {
     width: 20%;
     position: relative;
-    float: right;  
-    
+    float: right;   
 }
 
 .login {
-   
     float: left;
     width: 30%;
     margin-top: 2em;
-    margin-right: 5em;
-    
+    margin-right: 5em; 
 }
 
 .login_btn {
     float: left;
     position: absolute;
     margin-left: 10em;
-    bottom:0;
-    
+    bottom:0; 
 }
 
 .new_btn {
     float: left;
     position: absolute;
     margin-left: 15em;
-    bottom:0;
-     
+    bottom:0;   
 }
 
 .logged_in {
     float: right;
     width: 10%;
-    
     margin-right: 5em;
-
 }
 
-.upload_btn {
-    
+.upload_btn { 
     margin-top: 1em;
- 
  }
 
 .register_user {
-    
-    
-    
     margin-left: 5em;
-    
-
 }
 
-.upload {
-    
+.upload {   
    margin-left: 10em;
-
 }
 
 .content {
-    object-fit: cover;
-    
+    object-fit: cover; 
     padding: 5%
  }
 
@@ -184,12 +159,10 @@ h1 {
     list-style-type: none;
  }
 
-
  .comments li{
     list-style-type: none;
     width: 40%;
     border-bottom: 2px dotted #0b090c;
-    
  }
 
 

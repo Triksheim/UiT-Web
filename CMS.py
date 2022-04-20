@@ -40,7 +40,7 @@ def allowed_file(filename):
 @login_manager.user_loader
 def load_user(username):
     with MyDb() as db:
-        user = User(*db.get_user((username,)))
+        user = User(*db.get_user(username))
     return user
 
 # Sends email with activation code
@@ -56,66 +56,98 @@ def send_mail(id, email):
 def increment_views(id):
     try:
         with MyDb() as db:
-            db.add_view((id,)) 
+            db.add_view(id) 
     except:
         return
 
 # Returns content from db by ContentID. Returns only open content when not logged in.
 def get_content_by_id(id):
-    if  current_user.is_active:
-        try:
-            with MyDb() as db:
-                content = Content(*db.get_content(id))
-            return content
-        except:
-            return 
+    if current_user.is_active:
+        restriction = 'members'
     else:
-        try:
-            with MyDb() as db:
-                content = Content(*db.get_open_content(id))
-            return content
-        except:
-            return 
-
+        restriction = 'open'
+    try:
+        with MyDb() as db:
+            content = Content(*db.get_content(id,restriction))
+        return content
+    except:
+        return 
+        
 # Returns all contents from db by mimetype. Returns only open contents when not logged in.
 def get_content_by_type(mimetype):
     if current_user.is_active:
-        try:      
-            with MyDb() as db:
-                result = db.get_all_content_by_type(mimetype)
-                contents = [Content(*x) for x in result]
-            return contents
-        except:
-            print("nothing")
-            return ""
+        restriction = 'members'
     else:
-        try:      
+        restriction = 'open'
+    try:
+        if 'application%' in mimetype or 'text%' in mimetype:
             with MyDb() as db:
-                result = db.get_all_open_content_by_type(mimetype)
+                result = db.get_all_content_by_type_docs(mimetype, restriction)
                 contents = [Content(*x) for x in result]
-            return contents
-        except:
-            return ""
+        else:
+            with MyDb() as db:
+                result = db.get_all_content_by_type(mimetype, restriction)
+                contents = [Content(*x) for x in result]
+        return contents
+    except:
+        return ""
+   
+# Returns all contents from db by mimetype. Returns only open contents when not logged in.
+def get_content_by_type_ordered(mimetype, column):
+    if current_user.is_active:
+        restriction = 'members'
+    else:
+        restriction = 'open'
+    try:     
+        if 'application%' in mimetype or 'text%' in mimetype:
+            with MyDb() as db:
+                    if column == 'date':
+                        result = db.get_all_content_by_type_docs(mimetype, restriction)
+                    elif column == 'views':
+                        result = db.get_all_content_by_type_order_views_docs(mimetype, restriction)
+                    contents = [Content(*x) for x in result]
+        else:
+            with MyDb() as db:
+                if column == 'date':
+                    result = db.get_all_content_by_type(mimetype, restriction)
+                elif column == 'views':
+                    result = db.get_all_content_by_type_order_views(mimetype, restriction)
+                contents = [Content(*x) for x in result]
+        return contents
+    except:
+        return ""
 
 # Returns all contents from db when logged in. Return all open contents when not logged in.
 def get_all_content():
     if current_user.is_active:
-        try:      
-            with MyDb() as db:
-                result = db.get_all_content()
-                contents = [Content(*x) for x in result]
-            return contents
-        except:
-            return ""   
+        restriction = 'members'
     else:
-        try:      
-            with MyDb() as db:
-                result = db.get_all_open_content()
-                contents = [Content(*x) for x in result]
-            return contents
-        except:
-            return ""
-
+        restriction = 'open'
+    try:      
+        with MyDb() as db:
+            result = db.get_all_content(restriction)
+            contents = [Content(*x) for x in result]
+        return contents
+    except:
+        return ""   
+   
+# Returns all contents ordered by a column
+def get_all_content_ordered(column):
+    if current_user.is_active:
+        restriction = 'members'
+    else:
+        restriction = 'open'
+    try:      
+        with MyDb() as db:
+            if column == 'date':
+                result = db.get_all_content(restriction)
+            elif column == 'views':
+                result = db.get_all_content_order_views(restriction)
+            contents = [Content(*x) for x in result]
+        return contents
+    except:
+        return ""   
+    
 # Returns all comments for given contentID
 def get_comments_by_contentID(id):
     try:
@@ -198,7 +230,7 @@ def login():
         password = request.form['password']
         try:
             with MyDb() as db:
-                user = db.get_user((username,))
+                user = db.get_user(username)
                 if user:
                     user = User(*user)
                     if user.activated == 1:
@@ -260,11 +292,11 @@ def upload_file():
         filename = content_form.filename.data
         mimetype = content_form.mimetype.data
         size = len(code)
-        open = content_form.open.data
+        restriction = content_form.restriction.data
         views = 0
         user = current_user.username
 
-        content = (id, code, title, description, upload_date, tags, filename, mimetype, size, open, views, user)
+        content = (id, code, title, description, upload_date, tags, filename, mimetype, size, restriction, views, user)
         with MyDb() as db:
             db.upload_content(content)
         return redirect(url_for('content', login_form = LoginForm(), search_form = SearchForm(), id = id, _external=True))
@@ -300,9 +332,9 @@ def edit_update():
             title = content_form.title.data
             description = content_form.description.data
             tags = content_form.tags.data
-            open = content_form.open.data
+            restriction = content_form.restriction.data
             contentID = content_form.contentID.data
-            content_edit = (title, description, tags, open, contentID)
+            content_edit = (title, description, tags, restriction, contentID)
             with MyDb() as db:
                 db.edit_content(content_edit)
                 return redirect(url_for('content', id=contentID, _external=True))
@@ -336,8 +368,13 @@ def content():
             return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), content = content,
                     comments = comments, comment_form = CommentForm(), delete_commentID = delete_commentID)
     else:
-        try:      
-            contents = get_all_content()
+        try:
+            order = request.form
+            if order:
+                column = order['column']
+                contents = get_all_content_ordered(column)
+            else:
+                contents = get_all_content()
             return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), contents = contents)
         except:
             return redirect(url_for('front', _external=True))
@@ -390,7 +427,7 @@ def delete_comment():
             comment = get_comment_by_id(id)
             if current_user.username == 'admin' or current_user.username == comment.users_username:
                 with MyDb() as db:
-                    db.delete_comment((id,))
+                    db.delete_comment(id)
                     return redirect(url_for('content', id=contentID, _external=True))
         except:
             return redirect(url_for('front', _external=True))
@@ -399,24 +436,37 @@ def delete_comment():
 # Displays only images
 @app.route('/pictures', methods=['GET', 'POST'])
 def pictures():
-    mimetype = (('image%'),)
-    contents = get_content_by_type(mimetype)
+    mimetype = 'image%'
+    order = request.form
+    if order:
+        column = order['column']
+        contents = get_content_by_type_ordered(mimetype, column)
+    else:
+        contents = get_content_by_type(mimetype)
     return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), contents = contents)
 
 # Displays only videos
 @app.route('/videos', methods=['GET', 'POST'])
 def videos():
-    mimetype = (('video%'),)
-    contents = get_content_by_type(mimetype)
+    mimetype = 'video%'
+    order = request.form
+    if order:
+        column = order['column']
+        contents = get_content_by_type_ordered(mimetype, column)
+    else:
+        contents = get_content_by_type(mimetype)
     return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), contents = contents)
 
 # Displays only docs/text/applications
 @app.route('/documents', methods=['GET', 'POST'])
 def documents():
-    contents = get_content_by_type((('application%'),))
-    contents2 = get_content_by_type((('text%'),))
-    for content in contents2:
-        contents.append(content)
+    mimetype = ('application%', 'text%')
+    order = request.form
+    if order:
+        column = order['column']
+        contents = get_content_by_type_ordered(mimetype, column)
+    else:
+        contents = get_content_by_type(mimetype)
     return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), contents = contents)
 
 # Search for content by text. Returns content with part of 'text' in title or tags. Or exact match for username
