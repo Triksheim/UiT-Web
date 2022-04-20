@@ -276,7 +276,7 @@ def upload_file():
     content_form.filedata_base64 = content_form.filedata_base64.data
     return render_template('upload.html', content = content_form, file = True)
 
-# Edit content
+# Edit content details
 @app.route('/edit', methods=['POST'])
 @login_required
 def edit_content():
@@ -290,10 +290,10 @@ def edit_content():
         return render_template('edit.html', search_form = SearchForm(), content = content_form)
     return redirect(url_for('front', _external=True))
 
-# Edit content
-@app.route('/edit_insert', methods=['POST'])
+# Update content details in db
+@app.route('/edit_update', methods=['POST'])
 @login_required
-def insert_edit():
+def edit_update():
     content_form = ContentForm(request.form)
     if current_user.username == content_form.owner.data or current_user.username == 'admin':
         if content_form.validate():
@@ -378,7 +378,7 @@ def add_comment():
     print("failed comment validate")
     return redirect(url_for('front', _external=True))
 
-# Deletes a comment
+# Deletes a comment by id
 @app.route('/delete_comment', methods=['GET','POST'])
 @login_required
 def delete_comment():

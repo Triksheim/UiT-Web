@@ -11,7 +11,7 @@
     Fil: {{content.filename}} <br> 
     Filtype: {{content.mimetype}}  Størrelse: {{content.size}} bytes <br>
 
-    <form action={{url_for('insert_edit', _external=True)}} method="POST" enctype="multipart/form-data">
+    <form action={{url_for('edit_update', _external=True)}} method="POST" enctype="multipart/form-data">
 
       <br>
       {{content.title.label}}<br>

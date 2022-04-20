@@ -83,15 +83,15 @@
         {% if comments %}
         <h5>Kommentarer</h5>
             {% for comment in comments %}<li>
-                <p>{{comment.text}}</p> <h4>{{comment.users_username}} - {{comment.time}}
-                    {% if current_user.username == 'admin' or current_user.username == comment.users_username %}
+               <br><h7>{{comment.text}}</h7> <h4>{{comment.users_username}} - {{comment.time}} 
+                    {% if current_user.username == 'admin' or current_user.username == comment.users_username %} 
                         {% if delete_commentID == comment.commentID %}
-                            <span style="color: red;">[<a href = "{{url_for('delete_comment', id=comment.commentID, contentID = comment.content_contentID, _external=True) }}"> Bekreft sletting</a> ]</span>
+                            <span style="color: red;">[<a href = "{{url_for('delete_comment', id=comment.commentID, contentID = comment.content_contentID, _external=True) }}">Bekreft sletting</a>]</span> 
                         {% else %}
-                        <span style="color: red;">[<a href = "{{url_for('content', id = content.contentID, delete_commentID = comment.commentID, _external=True) }}"> Slett kommentar</a> ]</span>
+                            <a href = "{{url_for('content', id = content.contentID, delete_commentID = comment.commentID, _external=True) }}"> [Slett]</a> 
                         {% endif %}
                     {% endif %} 
-                </h4> </p> </li> 
+                </h4> </li> 
             {% endfor %}
         {% endif %}
         </div>
