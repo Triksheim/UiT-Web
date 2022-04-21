@@ -1,9 +1,9 @@
-from pydoc import describe
 from CMSDB import MyDb
 from forms import UserForm, ContentForm, CommentForm, SearchForm, LoginForm
 from user import User
 from content import Content
 from comment import Comment
+from asset import Asset
 
 from flask import Flask, redirect, render_template, request, url_for, make_response
 from flask_login import LoginManager, login_user, logout_user, current_user
@@ -16,6 +16,7 @@ from datetime import date, datetime
 import secrets
 import base64
 import uuid
+import random
 
 app = Flask(__name__)
 app.config['MAIL_SERVER'] = 'smtpserver.uit.no'
@@ -59,6 +60,15 @@ def increment_views(id):
             db.add_view(id) 
     except:
         return
+
+# Returns content from db by ContentID.
+def get_asset_by_id(id):
+    try:
+        with MyDb() as db:
+            asset = Asset(*db.get_asset(id))
+        return asset
+    except:
+        return 
 
 # Returns content from db by ContentID.
 def get_content_by_id(id):
@@ -167,10 +177,21 @@ def get_comment_by_id(id):
     except:
         return ""
 
-# Frontpage
+# Frontpage. Shows randomly picked recommended content
 @app.route('/', methods = ["GET", "POST"])
 def front():
-    return render_template('base.html', login_form = LoginForm(), search_form = SearchForm())
+    AMOUNT_TO_SHOW = 4
+    contents = get_all_content()
+    random_numbers = []
+    while len(random_numbers) < AMOUNT_TO_SHOW and len(random_numbers) != len(contents):
+        num = random.randrange(0, len(contents))
+        if num not in random_numbers:
+            random_numbers.append(num)
+    random_content = []
+    for number in random_numbers:
+        random_content.append(contents[number])
+
+    return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), contents = random_content, frontpage = True)
 
 # Register a new user
 @app.route('/register', methods = ["GET", "POST"])
@@ -393,6 +414,21 @@ def download_content(id):
             return redirect(url_for('front', _external=True))
     return redirect(url_for('front', _external=True))
     
+# Downloads content by id to display in browser using make_response.
+@app.route('/asset/<id>', methods=['GET', 'POST'])
+def download_asset(id):
+    if id:
+        asset = get_asset_by_id(id)
+        try:
+            response = make_response(asset.code)
+            response.headers.set('Content-Type', asset.mimetype)  
+            response.headers.set('Content-Disposition', 'inline', filename = asset.filename)
+            return response
+        except:
+            return redirect(url_for('front', _external=True))
+    return redirect(url_for('front', _external=True))
+
+
 # Adds comment linked to contentID to db when form is validated
 @app.route('/comment', methods=['POST'])
 def add_comment():

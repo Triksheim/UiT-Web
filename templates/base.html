@@ -20,7 +20,7 @@
 
       <div class="topbox">
         <div class="title">
-          <a href="{{url_for('front')}}"><h1>MiniUpload</h1> </a>
+          <a href="{{url_for('front')}}"> <img class="icon" src="{{url_for('download_asset', id=5, _external=True)}}"/><h1>MiniUpload</h1></a>
         </div>
         
         {% if current_user.is_authenticated %}

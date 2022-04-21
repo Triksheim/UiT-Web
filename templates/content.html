@@ -8,7 +8,7 @@
             {% if content.mimetype == 'image/jpeg' or  content.mimetype == 'image/jpg' or content.mimetype == 'image/png' or content.mimetype == 'image/gif' %}
                 <a href="{{url_for('download_content', id=content.contentID, _external=True) }}">
                 <img src="{{url_for('download_content', id=content.contentID, _external=True)}}" alt = "Bilde" /> </a> <br>
-                <h2>{{content.title}}</h2>
+                <h1>{{content.title}}</h1>
 
             {% elif content.mimetype == 'video/mp4' or content.mimetype == 'video/webm' or content.mimetype == 'video/ogg' %}
                 <div class="videoplayer">
@@ -19,15 +19,17 @@
                     </video> </a> <br>
                 </div>
             {% else %}
-                <h2>{{content.title}}</h2>
-            
+                <h1>{{content.title}}</h1>
+                <a href ="{{url_for('download_content', id=content.contentID, _external=True)}}">
+                    <img src="{{url_for('download_asset', id=2, _external=True)}}"/> </a>
             {% endif %}
             <a href ="{{url_for('download_content', id=content.contentID, _external=True)}}">
             <h4>Fil:{{ content.filename}} - Type:{{ content.mimetype}} - Size:{{ content.size}} bytes</h4> </a>
 
-            <h5>Beskrivelse: <br>
-            {{ content.description }}  </h5>
-
+            <div class="content_text">
+                <h2>Beskrivelse:</h2>
+                <h5>{{ content.description }} </h5>
+            </div>
             <h4>
             Dato: {{ content.date}} <br>
             Lastet opp av: {{ content.users_username}} <br>
@@ -77,7 +79,10 @@
             {% if comments %}
             <h5>Kommentarer</h5>
                 {% for comment in comments %}<li>
-                <br><h7>{{comment.text}}</h7> <h4>{{comment.users_username}} - {{comment.time}} 
+                <div class="comment_text">
+                <h7>{{comment.text}}</h7>
+                </div>
+                 <h4>{{comment.users_username}} - {{comment.time}} 
                         {% if current_user.username == 'admin' or current_user.username == comment.users_username %} 
                             {% if delete_commentID == comment.commentID %}
                                 <span style="color: red;">[<a href = "{{url_for('delete_comment', id=comment.commentID, contentID = comment.content_contentID, _external=True) }}">Bekreft sletting</a>]</span> 
@@ -92,9 +97,13 @@
         </div>
     {% endif %}
 
-
-
+    
     {%if contents %}
+        {% if frontpage %}
+            <div class="front_header">
+                <h1>Anbefalt innhold: <br></h1> <br>
+            </div>
+        {% else %}
         <div class = sort>
             <form action="{{ url_for(request.endpoint) }}" method="POST">
                 <select name="column" id="column" onchange="this.form.submit()">
@@ -105,14 +114,14 @@
                 <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
             </form>
         </div>
-
+        {% endif %}
         {% for content in contents %}
             {% if content.mimetype == 'image/jpeg' or  content.mimetype == 'image/jpg' or content.mimetype == 'image/png' or content.mimetype == 'image/gif'%}
                 <div class = img_box>
                     <a href="{{url_for('content', id=content.contentID, _external=True) }}">  
                     <img src="{{url_for('download_content', id=content.contentID, _external=True)}}"/>
-                    <h4>{{content.title}} - 
-                        {{content.date}} - {{content.users_username}} <br>
+                    <h4>{{content.title}} <br>
+                        {{content.mimetype}} - {{content.date}} - {{content.users_username}} <br>
                         Visninger: {{ content.views }}</h4>
                     </a>
                 </div>
@@ -120,11 +129,11 @@
         
             {% elif content.mimetype == 'video/mp4' or content.mimetype == 'video/webm' or content.mimetype == 'video/ogg' %}
                 <div class = vid_box> 
-                    <a href="{{url_for('content', id=content.contentID, _external=True) }}">
+                    <a href="{{url_for('content', id=content.contentID, _external=True) }}"> <br>
                     <p>
                     <video width="100%" height="100%" controls>
                     <source src="{{url_for('download_content', id=content.contentID, _external=True)}}" type="{{content.mimetype}}"></video>
-                    <h4>{{content.title}} <br>
+                    <h4><br> {{content.title}} <br>
                         {{content.mimetype}} - {{content.date}} - {{content.users_username}} <br>
                         Visninger: {{ content.views }}</h4>
                     </a> </p>
@@ -134,13 +143,10 @@
                 <div class = doc_box> 
                     <a href="{{url_for('content', id=content.contentID, _external=True)}}">
 
-                        <h2>{{content.title}}</h2>
-                        <h4>--------------------------------------------------------
-                        {{content.description}} <br>
-                        {{content.mimetype}} <br>
-                        {{content.date}} - {{content.users_username}} 
-
-                        --------------------------------------------------------
+                        <img src="{{url_for('download_asset', id=2, _external=True)}}"/>
+                        <h4>
+                        {{content.title}} <br>
+                        {{content.mimetype}} - {{content.date}} - {{content.users_username}} <br>
                         Visninger: {{ content.views }}</h4>
                     </a>
                 </div>

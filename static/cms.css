@@ -8,12 +8,14 @@ body {
 h1 {
     color: #212122;
     font-size: 2.0rem;
+    font-family: 'Georgia', serif;
   }
   
   h2 {
     color: #212122;
     font-size: 2.0rem;
     display: inline;
+    font-family: 'Georgia', serif;
   }
 
   h3 {
@@ -33,6 +35,7 @@ h1 {
     color: #212122;
     font-size: 1.2rem;
     display: inline;
+    font-family: 'Georgia', serif;
   }
 
   h6 {
@@ -41,11 +44,28 @@ h1 {
     display: inline;
   }
 
-  img {
+  img:not(.icon) {
     width: 400px;
     height: 300px;
     object-fit: contain; 
   }
+
+  img.icon{
+    float:left;
+    width: 70px;
+    height: 50px;
+    margin-top: 1em;
+  }
+
+  img.file{
+    float:left;
+    width: 100px;
+    height: 100px;
+    margin-top: -1em;
+    padding-left: 0em;
+    padding-right: 2em;
+  }
+
 
 .img_box{
     width: 450px;
@@ -66,9 +86,20 @@ h1 {
     width: 450px;
     height: 400px;
     float:left;
-    white-space: pre-line;
     text-align: center;
     display: inline-block; 
+}
+
+.img_box:hover{
+    background-color: rgba(173, 173, 173, 0.116);
+}
+
+.vid_box:hover{
+    background-color: rgba(173, 173, 173, 0.116);
+}
+
+.doc_box:hover{
+    background-color: rgba(173, 173, 173, 0.116);
 }
 
 .topbox {
@@ -81,10 +112,16 @@ h1 {
 }
 
 .title {
-    width: 22%;
+    width: 30%;
     margin-left: 1em;
-    margin-top: 1em;
+    margin-top: 0em;
     float: left;    
+}
+
+.front_header {
+    margin-top: 8em;
+    margin-left: 3em;
+
 }
 
 .category {
@@ -97,7 +134,8 @@ h1 {
 }
 
 .sort {
-    margin-top: 3em
+    padding-top: 8em;
+    padding-bottom: 2em;
 }
 
 .login_area {
@@ -115,15 +153,16 @@ h1 {
 }
 
 .login_btn {
-    width: 10%;
-    float:left;  
+    width: 20%;
+    float:left;
     padding-top: 0.5em;
+    padding-right: 1em;
 }
 
 .new_btn {
     float:left;
-    width: 10%;
-    padding-left: 3em;
+    width: 1%;
+    padding-left: 0em;
     padding-top: 0.5em;
 }
     
@@ -134,7 +173,7 @@ h1 {
 }
 
 .upload_btn { 
-    margin-top: 1em;
+    margin-top: 0.5em;
  }
 
 .register_user {
@@ -143,18 +182,19 @@ h1 {
 }
 
 .upload {   
-    padding-top: 10em;
-    margin-left: 10em;
+    padding-top: 7em;
+    margin-left: 5em;
 }
 
 .content {
     object-fit: cover; 
-    padding: 1%
+    padding: 1%; 
  }
 
- .content li {
-    list-style-type: none;
- }
+ .content_text{
+    white-space: pre-line;
+    width: 40%;
+}
 
  .single_content {
      
@@ -170,6 +210,11 @@ h1 {
     width: 40%;
     border-bottom: 2px dotted #0b090c;
  }
+
+.comment_text{
+    white-space: pre-line;
+}
+
 
 a:link {
     color: rgb(0, 0, 0);
@@ -188,3 +233,4 @@ a:hover {
     background-color: transparent;
     text-decoration: none;
 }
+

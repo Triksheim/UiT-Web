@@ -24,6 +24,7 @@ class MyDb:
         result = self.cursor.fetchall()
         return result
 
+
     def add_new_user(self, user):
         try:
             statement = """ INSERT INTO users (username, email, password, firstname, lastname, uuid, activated)
@@ -89,6 +90,20 @@ class MyDb:
                             ORDER BY date DESC
                         """
             parameters = (id, restriction)
+            self.cursor.execute(statement, parameters)
+            result = self.cursor.fetchone()
+        except mysql.connector.Error as error:
+            print(error)
+        return result
+
+    def get_asset(self, id):
+        try:
+            statement = """
+                            SELECT * 
+                            FROM assets
+                            WHERE id=%s
+                        """
+            parameters = (id,)
             self.cursor.execute(statement, parameters)
             result = self.cursor.fetchone()
         except mysql.connector.Error as error:
