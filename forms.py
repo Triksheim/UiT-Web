@@ -2,6 +2,7 @@ from wtforms import Form
 from wtforms.validators import DataRequired, Length, NumberRange
 from wtforms.fields import TextAreaField, HiddenField, IntegerField, StringField, SubmitField, EmailField, PasswordField
 from flask_wtf.file import FileField
+from flask_wtf.csrf import CSRFProtect
 
 class LoginForm(Form):
     username = StringField('Brukernavn:', validators=[DataRequired(), Length(max=45)])
@@ -9,11 +10,11 @@ class LoginForm(Form):
     submit = SubmitField('Logg inn')
 
 class UserForm(Form):
-    username = StringField('Username', validators=[DataRequired(), Length(max=45)])
-    email = EmailField('Email', validators=[DataRequired(), Length(max=45)])
-    password = PasswordField('Password', validators=[DataRequired(), Length(max=45)])
-    firstname = StringField('First Name', [DataRequired(), Length(max=45)])
-    lastname = StringField('Last Name', [DataRequired(), Length(max=45)])
+    username = StringField('Brukernavn', validators=[DataRequired(), Length(max=45)])
+    email = EmailField('Epost', validators=[DataRequired(), Length(max=45)])
+    password = PasswordField('Passord', validators=[DataRequired(), Length(max=45)])
+    firstname = StringField('Fornavn', [DataRequired(), Length(max=45)])
+    lastname = StringField('Etternavn', [DataRequired(), Length(max=45)])
     submit = SubmitField('Registrer')
     
 

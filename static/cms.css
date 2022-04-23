@@ -144,7 +144,7 @@ h1 {
 }
 
 .login {
-    width: 50%;
+    width: 30%;
     margin-top: 0em;
     margin-right: 0em; 
 }
@@ -153,10 +153,10 @@ h1 {
 }
 
 .login_btn {
-    width: 20%;
+    width: 1%;
     float:left;
     padding-top: 0.5em;
-    padding-right: 1em;
+    padding-right: 5em;
 }
 
 .new_btn {
@@ -168,8 +168,9 @@ h1 {
     
 .logged_in {
     float: right;
-    width: 10%;
+    width: 12%;
     margin-right: 5em;
+    margin-top: -1em;
 }
 
 .upload_btn { 

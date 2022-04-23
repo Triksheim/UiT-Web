@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>MiniUpload</title>
+        <title>Mini</title>
         <link rel="stylesheet" href="static/cms.css" />
      </head>
 
@@ -20,22 +20,22 @@
 
       <div class="topbox">
         <div class="title">
-          <a href="{{url_for('front')}}"> <img class="icon" src="{{url_for('download_asset', id=5, _external=True)}}"/><h1>MiniUpload</h1></a>
+          <a href="{{url_for('front')}}"> <img class="icon" src="{{url_for('download_asset', id=5, _external=True)}}"/><h1>Mini</h1></a>
         </div>
         
         {% if current_user.is_authenticated %}
           <p>
           <div class="logged_in">
-            Logget inn som {{ current_user.username }}
+            <h6>Innlogget som: </h6> <br> <h5>{{ current_user.username }} </h5>
             </p>
-            <form action="{{url_for('logout', _external=True)}}" method="post">
+            <form action="{{url_for('logout', _external=True)}}" method="get">
               <input type="submit" name="logout" value="Logg ut">
               <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
             </form>
           
             <div class="upload_btn">
               <form action="{{url_for('select_file', _external=True)}}" method="get">
-                  <input type="submit" name="upload" value="Last opp innhold"> <br>
+                  <input type="submit" name="upload" value="Last opp innhold">
                   <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
                 </form>
             </div>
@@ -45,10 +45,9 @@
           <div class="login_area">
             <div class="login">
               <form action="{{url_for('login', _external=True)}}" method="POST">
-                  <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
                   {{login_form.username.label}}
                   {{login_form.username}}
-
                   {{login_form.password.label}}
                   {{login_form.password}}
             </div>
@@ -60,8 +59,8 @@
               
               <div class="new_btn">
                 <form action="{{url_for('register', _external=True)}}" method="get">
-                  <input type="submit" name="Register" value="Registrer"> <br>
                   <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+                  <input type="submit" name="Register" value="Registrer"> <br>
                 </form>
               </div>
             </div>

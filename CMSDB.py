@@ -3,10 +3,10 @@ import mysql.connector
 class MyDb:
 
     def __init__(self) -> None:
-        dbconfig = {'host': '127.0.0.1',
-                    'user': 'user',
-                    'password': 'test',
-                    'database': 'myDb', }
+        dbconfig = {'host': 'kark.uit.no',
+                    'user': 'stud_v22_riksheimtor',
+                    'password': 'pepsi',
+                    'database': 'stud_v22_riksheimtor', }
         self.configuration = dbconfig
 
     def __enter__(self) -> 'cursor':

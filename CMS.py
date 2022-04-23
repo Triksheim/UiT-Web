@@ -19,12 +19,15 @@ import uuid
 import random
 
 app = Flask(__name__)
+#app.config['SERVER_NAME'] = 'kark.uit.no'
 app.config['MAIL_SERVER'] = 'smtpserver.uit.no'
 app.config['MAIL_PORT'] = 587
 app.config['MAX_CONTENT_LENGTH'] = 16777215 * 2
-app.secret_key = secrets.token_urlsafe(16)
+#app.secret_key = secrets.token_urlsafe(16)
+app.secret_key = 'veldighemmelig'
 
-csrf = CSRFProtect(app)
+csrf = CSRFProtect()
+csrf.init_app(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
