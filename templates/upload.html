@@ -2,81 +2,78 @@
 
 {% block body %}
 
-<div class = "upload">
+  <div class = "upload">
 
-  <br> <h1>Filopplasting</h1> 
+    <br> <h1>Filopplasting</h1> 
 
-  {% if current_user.is_authenticated %}
+    {% if current_user.is_authenticated %}
 
-    {% if file %}
-      Fil: {{content.filename}} <br> 
-      Filtype: {{content.mimetype}}  Størrelse: {{content.size}} bytes <br>
+      {% if file %}
+        Fil: {{content.filename}} <br> 
+        Filtype: {{content.mimetype}}  Størrelse: {{content.size}} bytes <br>
 
-      {% if content.mimetype == 'image/jpeg' or  content.mimetype == 'image/pjpeg' or content.mimetype == 'image/png' or content.mimetype == 'image/gif'%}
-        <img src="data:{{content.mimetype}};base64,{{content.filedata_base64}}" alt="{{content.filename}}"/> <br>
+        {% if content.mimetype == 'image/jpeg' or  content.mimetype == 'image/pjpeg' or content.mimetype == 'image/png' or content.mimetype == 'image/gif'%}
+          <img src="data:{{content.mimetype}};base64,{{content.filedata_base64}}" alt="{{content.filename}}"/> <br>
+        {% endif %}
+
+        <form action={{url_for('upload_file', _external=True)}} method="POST" enctype="multipart/form-data">
+          <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+          <br>
+          {{content.title.label}}<br>
+          {{  content.title(size=20)  }}<br> 
+          {% for error in content.title.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+          <br>
+          {{content.description.label}}<br>
+          {{  content.description(rows="3", cols="50")  }}<br> 
+          {% for error in content.description.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+          <br>
+          {{content.tags.label}}<br>
+          {{  content.tags(size=32)  }}<br> 
+          {% for error in content.tags.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+          <br>
+          Tilgjengelighet <br>
+          <select name="restriction">
+            <option value=open>For alle</option>
+            <option value=members>Kun medlemmer</option>
+          </select> <br>
+          {% for error in content.restriction.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+
+          <input type="hidden" id="filedata" name="filedata" value="{{ content.filedata }}">
+          <input type="hidden" id="filedata_base64" name="filedata_base64" value="{{ content.filedata_base64 }}">
+          <input type="hidden" id="filename" name="filename" value="{{ content.filename }}">
+          <input type="hidden" id="mimetype" name="mimetype" value="{{ content.mimetype }}">
+          <input type="hidden" id="size" name="size" value="{{ content.size }}">
+          <p>{{ content.submit() }}</p> <br>
+        </form>
+      
+      {% else %}
+        <form action={{ url_for('select_file', _external=True) }} method="POST" enctype="multipart/form-data">
+          <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+          <img class="file" src="{{url_for('download_asset', id=1, _external=True)}}"/>
+          {{content.file()}}
+
+          {% if invalid_file %}
+            <span style="color: red;">
+              <p>Ulovlig filtype. </p>
+                <p>Vennligst bruk: 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'webm', 'ogg', 'py' eller 'zip'. </p>
+            </span> <br>
+          {% endif %}
+          <p>{{ content.submit_next() }}</p> <br>
+        </form>
       {% endif %}
 
-      <form action={{url_for('upload_file', _external=True)}} method="POST" enctype="multipart/form-data">
-        <br>
-        {{content.title.label}}<br>
-        {{  content.title(size=20)  }}<br> 
-        {% for error in content.title.errors %}
-          <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-
-        <br>
-        {{content.description.label}}<br>
-        {{  content.description(rows="3", cols="50")  }}<br> 
-        {% for error in content.description.errors %}
-          <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-
-        <br>
-        {{content.tags.label}}<br>
-        {{  content.tags(size=32)  }}<br> 
-        {% for error in content.tags.errors %}
-          <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-
-        <br>
-        Tilgjengelighet <br>
-        <select name="restriction">
-          <option value=open>For alle</option>
-          <option value=members>Kun medlemmer</option>
-        </select> <br>
-        {% for error in content.restriction.errors %}
-          <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-
-        <input type="hidden" id="filedata" name="filedata" value="{{ content.filedata }}">
-        <input type="hidden" id="filedata_base64" name="filedata_base64" value="{{ content.filedata_base64 }}">
-        <input type="hidden" id="filename" name="filename" value="{{ content.filename }}">
-        <input type="hidden" id="mimetype" name="mimetype" value="{{ content.mimetype }}">
-        <input type="hidden" id="size" name="size" value="{{ content.size }}">
-        <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
-        <p>{{ content.submit() }}</p> <br>
-      </form>
-    
     {% else %}
-      <form action={{ url_for('select_file', _external=True) }} method="POST" enctype="multipart/form-data">
-        <img class="file" src="{{url_for('download_asset', id=1, _external=True)}}"/>
-        {{content.file()}}
-
-        {% if invalid_file %}
-          <span style="color: red;">
-            <p>Ulovlig filtype. </p>
-              <p>Vennligst bruk: 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'webm', 'ogg' eller 'zip'. </p>
-          </span> <br>
-        {% endif %}
-        <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
-        <p>{{ content.submit_next() }}</p> <br>
-      </form>
+          <h2>Not logged in</h2>
     {% endif %}
 
-  {% else %}
-        <h2>Not logged in</h2>
-  {% endif %}
-
-</div>
+  </div>
 
 {% endblock %}

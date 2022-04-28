@@ -2,68 +2,70 @@
 
 {% block body %}
 
-<div class = "register_user">
+    <div class = "register_user">
 
         <h1>Registrer ny bruker</h1>
-
-        <form action="{{url_for('register', _external=True)}}" method="POST">
-            <div class = "userform">
+        <div class = "userform">
+            <form action="{{url_for('register', _external=True)}}" method="POST">
+                <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
                 
                 <div class = "brukernavn">
-                    <br>
+                    <p>
                     {{form.username.label}}<br>
                     {{  form.username(size=16)  }}<br> 
                     {% for error in form.username.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
+                    </p>
                 </div>
 
                 <div class = "passord">
-                    <br>
+                    <p>
                     {{form.password.label}}<br>
                     {{form.password(size=16)}}<br>
                     {% for error in form.password.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
+                    </p>
                 </div>
 
                 <div class = "email">
-                    <br>
+                    <p>
                     {{form.email.label}}<br>
                     {{form.email(size=16)}}<br> 
                     {% for error in form.email.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
+                    </p>
                 </div>
 
                 <div class = "fornavn">
-                    <br>
+                    <p>
                     {{form.firstname.label}}<br>
                     {{form.firstname(size=16)}}<br>
                     {% for error in form.firstname.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
+                    </p>
                 </div>
 
                 <div class = "etternavn">
-                    <br>
+                    <p>
                     {{form.lastname.label}}<br>
-                    {{form.lastname(size=16)}}<br> <br> <br>
+                    {{form.lastname(size=16)}}<br> 
                     {% for error in form.lastname.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
+                    </p>
                 </div>
               
-                <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
-
                 {% if error %}
                 <span style="color: red;">[{{ error }}]</span>
                 {% endif %}
-
                 <br>
-                <p>{{ form.submit }}</p> <br>
-            </div>
-        </form>
-                
+                <p>{{ form.submit }}</p> 
+            
+            </form>
+        </div>        
     </div> 
-    {% endblock %}
+{% endblock %}
