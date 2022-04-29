@@ -34,7 +34,7 @@
                 Dato: {{ content.date}} <br>
                 Lastet opp av: {{ content.users_username}} <br>
                 
-                {% if content.restriction == open %}
+                {% if content.restriction == 'open' %}
                     Synlighet: Alle <br>
                 {% else %}
                     Synlighet: Kun medlemmer <br>
@@ -49,7 +49,7 @@
                         <input type="hidden" id="title" name="title" value="{{ content.title }}">
                         <input type="hidden" id="tags" name="tags" value="{{ content.tags }}">
                         <input type="hidden" id="description" name="description" value="{{ content.description }}">
-                        <input type="hidden" id="open" name="open" value="{{ content.open }}">
+                        <input type="hidden" id="restriction" name="restriction" value="{{ content.restriction}}">
                         <input type="hidden" id="filename" name="filename" value="{{ content.filename }}">
                         <input type="hidden" id="mimetype" name="mimetype" value="{{ content.mimetype }}">
                         <input type="hidden" id="size" name="size" value="{{ content.size }}">
