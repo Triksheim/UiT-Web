@@ -81,6 +81,21 @@ class MyDb:
                 print(error)
                 return error
 
+    def delete_content(self, id):
+        try:
+            statement = """
+                            DELETE FROM content
+                            WHERE contentID=%s
+                        """
+            parameters = (id,)
+            self.cursor.execute(statement, parameters)
+            result = self.cursor.fetchone()
+        except mysql.connector.Error as error:
+            print(error)
+        return result
+
+
+
     def get_content(self, id, restriction):
         try:
             statement = """

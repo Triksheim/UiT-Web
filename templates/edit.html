@@ -10,6 +10,12 @@
 
       Fil: {{content.filename}} <br> 
       Filtype: {{content.mimetype}}  Størrelse: {{content.size}} bytes <br>
+      <form action={{url_for('delete_content', _external=True)}} method="POST">
+        <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" id="contentID" name="contentID" value="{{ content.contentID }}">
+        <input type="hidden" id="owner" name="owner" value="{{ content.owner }}">
+        <input type="submit" id="delete" name="delete" value="Slett innhold">
+      </form>
 
       <form action={{url_for('edit_update', _external=True)}} method="POST" enctype="multipart/form-data">
         <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">

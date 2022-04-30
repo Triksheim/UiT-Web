@@ -452,7 +452,7 @@ def add_comment():
     print("failed comment validate")
     return redirect(url_for('front', _external=True))
 
-# Deletes a comment by id
+# Deletes a comment by id. Only admin or comment author
 @app.route('/delete_comment', methods=['GET','POST'])
 @login_required
 def delete_comment():
@@ -468,6 +468,22 @@ def delete_comment():
         except:
             return redirect(url_for('front', _external=True))
     return redirect(url_for('front', _external=True))
+
+# Deletes content by id. Only admin or content owner
+@app.route('/delete_content', methods=['POST'])
+@login_required
+def delete_content():
+    form = request.form
+    contentID = form['contentID']
+    owner = form['owner']
+    if current_user.username == 'admin' or current_user.username == owner:
+        try:
+                with MyDb() as db:
+                    db.delete_content(contentID)         
+        except:
+            return redirect(url_for('front', _external=True))
+    return redirect(url_for('front', _external=True))
+
 
 # Displays only images
 @app.route('/pictures', methods=['GET', 'POST'])
