@@ -1,5 +1,5 @@
 from CMSDB import MyDb
-from forms import UserForm, ContentForm, CommentForm, SearchForm, LoginForm
+from forms import UserForm, ContentForm, CommentForm, LoginForm
 from user import User
 from content import Content
 from comment import Comment
