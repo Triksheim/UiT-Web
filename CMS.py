@@ -311,7 +311,7 @@ def upload_file():
         code = eval(content_form.filedata.data)
         title = content_form.title.data
         description = content_form.description.data
-        upload_date = date.today()
+        upload_date = datetime.now()
         tags = content_form.tags.data
         filename = content_form.filename.data
         mimetype = content_form.mimetype.data

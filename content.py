@@ -5,7 +5,7 @@ class Content:
         self.code = code
         self.title = title
         self.description = description
-        self.date = date
+        self.date = date.strftime('%Y-%m-%d')
         self.tags = tags
         self.filename = filename
         self.mimetype = mimetype
