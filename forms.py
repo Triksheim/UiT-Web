@@ -2,7 +2,7 @@ from wtforms import Form
 from wtforms.validators import DataRequired, Length, NumberRange
 from wtforms.fields import TextAreaField, HiddenField, IntegerField, StringField, SubmitField, EmailField, PasswordField
 from flask_wtf.file import FileField
-from flask_wtf.csrf import CSRFProtect
+
 
 class LoginForm(Form):
     username = StringField('Brukernavn:', validators=[DataRequired(), Length(max=45)])
@@ -43,6 +43,3 @@ class CommentForm(Form):
     contentID = HiddenField()
     submit = SubmitField('Kommenter')
 
-class SearchForm(Form):
-    search_text = StringField('Search', validators=[DataRequired(), Length(max=45)])
-    submit = SubmitField('Søk')

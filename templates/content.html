@@ -103,9 +103,9 @@
                 </div>
             {% else %}
             <div class = sort>
-                <form action="{{ url_for(request.endpoint) }}" method="POST">
-                    <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
-                    <select name="column" id="column" onchange="this.form.submit()">
+                <form action="{{ url_for(request.endpoint) }}" method="GET">
+                    <input type="hidden" name="text" id="text" value="{{text}}">
+                    <select name="order" id="order" onchange="this.form.submit()">
                         <option value="">Sorter</option>
                         <option value=date>Nyeste</option>
                         <option value=views>Mest sett</option> 

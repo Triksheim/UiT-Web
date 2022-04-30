@@ -194,7 +194,7 @@ def front():
     for number in random_numbers:
         random_content.append(contents[number])
 
-    return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), contents = random_content, frontpage = True)
+    return render_template('content.html', login_form = LoginForm(), contents = random_content, frontpage = True)
 
 # Register a new user
 @app.route('/register', methods = ["GET", "POST"])
@@ -215,9 +215,9 @@ def register():
                 error = db.add_new_user(user)
                 if error:
                     if 'PRIMARY' in error.msg:
-                        return render_template('register.html', login_form = LoginForm(), search_form = SearchForm(), form = form, error = 'Brukernavn allerede i bruk')
+                        return render_template('register.html', login_form = LoginForm(), form = form, error = 'Brukernavn allerede i bruk')
                     elif 'email_UNIQUE' in error.msg:
-                        return render_template('register.html', login_form = LoginForm(), search_form = SearchForm(), form = form, error = 'Epostadresse allerede i bruk')          
+                        return render_template('register.html', login_form = LoginForm(), form = form, error = 'Epostadresse allerede i bruk')          
         except:
             print("failed adding user")
             return redirect(url_for('front', _external=True))
@@ -225,12 +225,12 @@ def register():
         # Sends activation email after user is successfully added to db
         try:
             send_mail(user_uuid, email)
-            return render_template('base.html', login_form = LoginForm(), search_form = SearchForm(), email = email)
+            return render_template('base.html', login_form = LoginForm(), email = email)
         except:
             print("failed sending mail")
             return redirect(url_for('front', _external=True))       
     else:   
-        return render_template('register.html', login_form = LoginForm(), search_form = SearchForm(), form = form)
+        return render_template('register.html', login_form = LoginForm(), form = form)
 
 # Activates user account when id == user uuid
 @app.route('/activate', methods = ["GET"])
@@ -240,7 +240,7 @@ def activate_user():
         try:
             with MyDb() as db:
                 db.activate_user((id,))
-                return render_template('base.html', login_form = LoginForm(), search_form = SearchForm(), activated = True)
+                return render_template('base.html', login_form = LoginForm(), activated = True)
         except:
             return redirect(url_for('front', _external=True))
     return redirect(url_for('front', _external=True))
@@ -280,7 +280,7 @@ def select_file():
     is_file_selected = request.args.get('file_selected')
 
     if  request.method == "GET":
-        return render_template('upload.html', login_form = LoginForm(), search_form = SearchForm(), content = content_form)
+        return render_template('upload.html', login_form = LoginForm(), content = content_form)
     
     if  request.method == "POST":
         file = request.files['file']
@@ -294,11 +294,11 @@ def select_file():
             if 'image' in file.mimetype:
                 filedata_base64 = base64.b64encode(content_form.filedata)
                 content_form.filedata_base64 = filedata_base64.decode('utf-8')
-            return render_template('upload.html', login_form = LoginForm(), search_form = SearchForm(), content = content_form, file = True)
+            return render_template('upload.html', login_form = LoginForm(), content = content_form, file = True)
         else:
-            return render_template('upload.html', login_form = LoginForm(), search_form = SearchForm(), content = content_form, invalid_file = True)
+            return render_template('upload.html', login_form = LoginForm(), content = content_form, invalid_file = True)
     else:
-        return render_template('upload.html', login_form = LoginForm(), search_form = SearchForm(), content = content_form, file = is_file_selected)
+        return render_template('upload.html', login_form = LoginForm(), content = content_form, file = is_file_selected)
     
 # Adds content to db if form is validated
 @app.route('/uploading', methods=['GET', 'POST'])
@@ -323,7 +323,7 @@ def upload_file():
         content = (id, code, title, description, upload_date, tags, filename, mimetype, size, restriction, views, user)
         with MyDb() as db:
             db.upload_content(content)
-        return redirect(url_for('content', login_form = LoginForm(), search_form = SearchForm(), id = id, _external=True))
+        return redirect(url_for('content', login_form = LoginForm(), id = id, _external=True))
     
     content_form.filename = content_form.filename.data
     content_form.filedata = content_form.filedata.data
@@ -343,7 +343,7 @@ def edit_content():
         content_form.mimetype = content_form.mimetype.data
         content_form.size = content_form.size.data
         content_form.contentID = content_form.contentID.data
-        return render_template('edit.html', search_form = SearchForm(), content = content_form)
+        return render_template('edit.html', content = content_form)
     return redirect(url_for('front', _external=True))
 
 # Update content details in db if form is validated
@@ -368,7 +368,7 @@ def edit_update():
             content_form.size = content_form.size.data 
             contentID = content_form.contentID.data 
             content_form.owner = content_form.owner.data
-            return render_template('edit.html', search_form = SearchForm(), content = content_form)
+            return render_template('edit.html', content = content_form)
     return redirect(url_for('front', _external=True))
 
 # Displays a single content when id is given. Else shows all contents.
@@ -382,24 +382,23 @@ def content():
             content = get_content_by_id(id)
             comments = get_comments_by_contentID(id)
             if content:
-                return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), content = content,
+                return render_template('content.html', login_form = LoginForm(), content = content,
                     comments = comments, comment_form = CommentForm(), delete_commentID = delete_commentID, content_form = ContentForm())
             else:
                 print("no content")
                 return redirect(url_for('front', _external=True))
         except:
             print("failed loading content")
-            return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), content = content,
+            return render_template('content.html', login_form = LoginForm(), content = content,
                     comments = comments, comment_form = CommentForm(), delete_commentID = delete_commentID)
     else:
         try:
-            order = request.form
+            order = request.args.get('order')
             if order:
-                column = order['column']
-                contents = get_all_content_ordered(column)
+                contents = get_all_content_ordered(order)
             else:
                 contents = get_all_content()
-            return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), contents = contents)
+            return render_template('content.html', login_form = LoginForm(), contents = contents)
         except:
             return redirect(url_for('front', _external=True))
 
@@ -489,51 +488,52 @@ def delete_content():
 @app.route('/pictures', methods=['GET', 'POST'])
 def pictures():
     mimetype = 'image%'
-    order = request.form
+    order = request.args.get('order')
     if order:
-        column = order['column']
-        contents = get_content_by_type_ordered(mimetype, column)
+        contents = get_content_by_type_ordered(mimetype, order)
     else:
         contents = get_content_by_type(mimetype)
-    return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), contents = contents)
+    return render_template('content.html', login_form = LoginForm(), contents = contents)
 
 # Displays only videos
 @app.route('/videos', methods=['GET', 'POST'])
 def videos():
     mimetype = 'video%'
-    order = request.form
+    order = request.args.get('order')
     if order:
-        column = order['column']
-        contents = get_content_by_type_ordered(mimetype, column)
+        contents = get_content_by_type_ordered(mimetype, order)
     else:
         contents = get_content_by_type(mimetype)
-    return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), contents = contents)
+    return render_template('content.html', login_form = LoginForm(), contents = contents)
 
 # Displays only docs/text/applications
 @app.route('/documents', methods=['GET', 'POST'])
 def documents():
     mimetype = ('application%', 'text%')
-    order = request.form
+    order = request.args.get('order')
     if order:
-        column = order['column']
-        contents = get_content_by_type_ordered(mimetype, column)
+        contents = get_content_by_type_ordered(mimetype, order)
     else:
         contents = get_content_by_type(mimetype)
-    return render_template('content.html', login_form = LoginForm(), search_form = SearchForm(), contents = contents)
+    return render_template('content.html', login_form = LoginForm(), contents = contents)
 
 # Search for content by text. Returns content with part of 'text' in title or tags. Or exact match for username
-@app.route('/search', methods=['POST'])
+@app.route('/search', methods=['GET','POST'])
 def search():
-    search_form = SearchForm(request.form)
-    if search_form:
+    text = request.args.get('text')
+    order = request.args.get('order')
+    if text:
         try:
-            text = search_form.search_text.data.lower()
-            all_contents = get_all_content()
+            text = text.lower()
+            if order:
+                all_contents = get_all_content_ordered(order)
+            else:
+                all_contents = get_all_content()
             found_content = []
             for content in all_contents:
-                if text in content.tags.lower() or text in content.title.lower() or  text == content.users_username.lower():
+                if text in content.tags.lower() or text in content.title.lower() or text == content.users_username.lower():
                     found_content.append(content)
-            return render_template('content.html', login_form = LoginForm(), search_form = search_form, contents = found_content)
+            return render_template('content.html', login_form = LoginForm(), contents = found_content, text = text)
         except:
             return redirect(url_for('front', _external=True))
     return redirect(url_for('front', _external=True))
