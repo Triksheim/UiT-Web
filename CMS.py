@@ -64,6 +64,22 @@ def increment_views(id):
     except:
         return
 
+# Decrements view count. Used when commenting and liking to not increase views.
+def decrement_views(id):
+    try:
+        with MyDb() as db:
+            db.remove_view(id) 
+    except:
+        return
+
+# Increments likes by contentID
+def increment_likes(id):
+    try:
+        with MyDb() as db:
+            db.add_like(id) 
+    except:
+        return
+
 # Returns content from db by ContentID.
 def get_asset_by_id(id):
     try:
@@ -118,6 +134,8 @@ def get_content_by_type_ordered(mimetype, column):
                         result = db.get_all_content_by_type_docs(mimetype, restriction)
                     elif column == 'views':
                         result = db.get_all_content_by_type_order_views_docs(mimetype, restriction)
+                    elif column == 'likes':
+                        result = db.get_all_content_by_type_order_likes_docs(mimetype, restriction)
                     contents = [Content(*x) for x in result]
         else:
             with MyDb() as db:
@@ -125,6 +143,9 @@ def get_content_by_type_ordered(mimetype, column):
                     result = db.get_all_content_by_type(mimetype, restriction)
                 elif column == 'views':
                     result = db.get_all_content_by_type_order_views(mimetype, restriction)
+                elif column == 'likes':
+                    result = db.get_all_content_by_type_order_likes(mimetype, restriction)
+
                 contents = [Content(*x) for x in result]
         return contents
     except:
@@ -156,6 +177,8 @@ def get_all_content_ordered(column):
                 result = db.get_all_content(restriction)
             elif column == 'views':
                 result = db.get_all_content_order_views(restriction)
+            elif column == 'likes':
+                result = db.get_all_content_order_likes(restriction)
             contents = [Content(*x) for x in result]
         return contents
     except:
@@ -447,6 +470,7 @@ def add_comment():
                 db.add_new_comment(comment)
         except:
             print("failed adding comment")
+        decrement_views(contentID) # Removes one view before reloading to not increment views by commenting
         return redirect(url_for('content', id=contentID, _external=True))
     print("failed comment validate")
     return redirect(url_for('front', _external=True))
@@ -538,6 +562,18 @@ def search():
             return redirect(url_for('front', _external=True))
     return redirect(url_for('front', _external=True))
 
+@app.route('/like', methods=['GET'])
+@login_required
+def like():
+    contentID = request.args.get('contentID')
+    if contentID:
+        try:
+            increment_likes(contentID)
+            decrement_views(contentID) # Gets added back when content page reloads after liking
+            return redirect(url_for('content', id=contentID, _external=True))
+        except:
+            return redirect(url_for('front', _external=True))
+    return redirect(url_for('front', _external=True))
 
 if __name__ == "__main__":
     app.run(debug=True)

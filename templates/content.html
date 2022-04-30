@@ -25,12 +25,16 @@
                 {% endif %}
                 <a href ="{{url_for('download_content', id=content.contentID, _external=True)}}">
                 <h4>Fil:{{ content.filename}} - Type:{{ content.mimetype}} - Size:{{ content.size}} bytes</h4> </a>
-
                 <div class="content_text">
-                    <h2>Beskrivelse:</h2>
+                    <h5>Beskrivelse:</h5>
                     <h5>{{ content.description }} </h5>
                 </div>
                 <h4>
+                {% if current_user.is_authenticated %}
+                    <a href="{{url_for('like', contentID = content.contentID, _external=True)}}">
+                    <img class="like" src="{{url_for('download_asset', id=6, _external=True)}}" alt="like"/> </a> <br>
+                {% endif %}
+                Likes: {{content.likes}} <br>
                 Dato: {{ content.date}} <br>
                 Lastet opp av: {{ content.users_username}} <br>
                 
@@ -108,7 +112,8 @@
                     <select name="order" id="order" onchange="this.form.submit()">
                         <option value="">Sorter</option>
                         <option value=date>Nyeste</option>
-                        <option value=views>Mest sett</option> 
+                        <option value=views>Mest sett</option>
+                        <option value=likes>Likes</option>
                     </select> 
                 </form>
             </div>
@@ -121,7 +126,7 @@
                         <img src="{{url_for('download_content', id=content.contentID, _external=True)}}" alt="img"/>
                         <h4>{{content.title}} <br>
                             {{content.mimetype}} - {{content.date}} - {{content.users_username}} <br>
-                            Visninger: {{ content.views }}</h4>
+                            Likes: {{content.likes}} - Visninger: {{ content.views }}</h4>
                         </a>
                     </div>
 
@@ -132,7 +137,7 @@
                         <source src="{{url_for('download_content', id=content.contentID, _external=True)}}" type="{{content.mimetype}}"></video>
                         <h4><br> {{content.title}} <br>
                             {{content.mimetype}} - {{content.date}} - {{content.users_username}} <br>
-                            Visninger: {{ content.views }}</h4>
+                            Likes: {{content.likes}} - Visninger: {{ content.views }}</h4>
                         </a> 
                     </div>
 
@@ -144,7 +149,7 @@
                             <h4>
                             {{content.title}} <br>
                             {{content.mimetype}} - {{content.date}} - {{content.users_username}} <br>
-                            Visninger: {{ content.views }}</h4>
+                            Likes: {{content.likes}} - Visninger: {{ content.views }}</h4>
                         </a>
                     </div>
                 {% endif %}

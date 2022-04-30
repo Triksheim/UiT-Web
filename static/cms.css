@@ -66,6 +66,13 @@ h1 {
     padding-right: 2em;
   }
 
+  img.like{
+    
+    width: 35px;
+    height: 35px;
+   
+  }
+
 
 .img_box{
     width: 450px;

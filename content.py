@@ -1,6 +1,6 @@
 class Content:
 
-    def __init__(self,contentID, code, title, description, date, tags, filename, mimetype, size, restriction, views, user):
+    def __init__(self,contentID, code, title, description, date, tags, filename, mimetype, size, restriction, views, user, likes):
         self.contentID = contentID
         self.code = code
         self.title = title
@@ -13,3 +13,4 @@ class Content:
         self.restriction = restriction
         self.views = views
         self.users_username = user
+        self.likes = likes

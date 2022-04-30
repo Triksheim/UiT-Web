@@ -154,6 +154,21 @@ class MyDb:
             print(error)
         return result
 
+    def get_all_content_order_likes(self, restriction):
+        try:
+            statement = """ SELECT *
+                            FROM content
+                            WHERE restriction='open' OR restriction=%s
+                            ORDER BY likes DESC;
+                        """
+            parameters = (restriction,)
+            self.cursor.execute(statement, parameters)
+            result = self.cursor.fetchall()
+        except mysql.connector.Error as error:
+            print(error)
+        return result
+
+
     def get_all_content_by_type(self, mimetype, restriction):
         try:
             statement = """
@@ -199,6 +214,21 @@ class MyDb:
             print(error)
         return result
 
+    def get_all_content_by_type_order_likes(self, mimetype, restriction):
+        try:
+            statement = """
+                            SELECT * 
+                            FROM content 
+                            WHERE mimetype like %s AND (restriction='open' OR restriction=%s)
+                            ORDER BY likes DESC
+                        """
+            parameters = (mimetype, restriction)
+            self.cursor.execute(statement, parameters)
+            result = self.cursor.fetchall()
+        except mysql.connector.Error as error:
+            print(error)
+        return result
+
     def get_all_content_by_type_order_views_docs(self, mimetype, restriction):
         try:
             statement = """
@@ -206,6 +236,21 @@ class MyDb:
                             FROM content 
                             WHERE (mimetype like %s OR mimetype like %s) AND (restriction='open' OR restriction=%s)
                             ORDER BY views DESC
+                        """
+            parameters = (mimetype[0], mimetype[1], restriction)
+            self.cursor.execute(statement, parameters)
+            result = self.cursor.fetchall()
+        except mysql.connector.Error as error:
+            print(error)
+        return result
+
+    def get_all_content_by_type_order_likes_docs(self, mimetype, restriction):
+        try:
+            statement = """
+                            SELECT * 
+                            FROM content 
+                            WHERE (mimetype like %s OR mimetype like %s) AND (restriction='open' OR restriction=%s)
+                            ORDER BY likes DESC
                         """
             parameters = (mimetype[0], mimetype[1], restriction)
             self.cursor.execute(statement, parameters)
@@ -232,6 +277,45 @@ class MyDb:
             self.cursor.execute(statement2, parameters2)    
         except mysql.connector.Error as error:
                 print(error)
+
+    def remove_view(self, id):
+        try:
+            statement1 = """SELECT views
+                            FROM content
+                            WHERE contentID=%s
+                        """
+            parameters = (id,)
+            self.cursor.execute(statement1, parameters)
+            views = self.cursor.fetchone()
+            
+            statement2 = """UPDATE content
+                            SET views=%s
+                            WHERE contentID=%s 
+                        """
+            parameters2 = (views[0]-1, id)
+            self.cursor.execute(statement2, parameters2)    
+        except mysql.connector.Error as error:
+                print(error)
+
+    def add_like(self, id):
+        try:
+            statement1 = """SELECT likes
+                            FROM content
+                            WHERE contentID=%s
+                        """
+            parameters = (id,)
+            self.cursor.execute(statement1, parameters)
+            likes = self.cursor.fetchone()
+            
+            statement2 = """UPDATE content
+                            SET likes=%s
+                            WHERE contentID=%s 
+                        """
+            parameters2 = (likes[0]+1, id)
+            self.cursor.execute(statement2, parameters2)    
+        except mysql.connector.Error as error:
+                print(error)
+
 
     def add_new_comment(self, comment):
         try:
