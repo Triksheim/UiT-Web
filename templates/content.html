@@ -13,10 +13,9 @@
                 {% elif content.mimetype == 'video/mp4' or content.mimetype == 'video/webm' or content.mimetype == 'video/ogg' %}
                     <div class="videoplayer">
                         <h1>{{content.title}}</h1>
-                        <a href="{{url_for('download_content', id=content.contentID, _external=True) }}">
-                        <video width="50%" height="800px" controls>
+                        <video width="800" height="600" controls>
                         <source src="{{url_for('download_content', id=content.contentID, _external=True)}}" type="{{content.mimetype}}">
-                        </video> </a> <br>
+                        </video>  <br>
                     </div>
                 {% else %}
                     <h1>{{content.title}}</h1>
@@ -89,7 +88,7 @@
                                     {% if delete_commentID == comment.commentID %}
                                         <span style="color: red;">[<a href = "{{url_for('delete_comment', id=comment.commentID, contentID = comment.content_contentID, _external=True) }}">Bekreft sletting</a>]</span> 
                                     {% else %}
-                                        <a href = "{{url_for('content', id = content.contentID, delete_commentID = comment.commentID, _external=True) }}"> [Slett]</a> 
+                                        <a href = "{{url_for('content', id = content.contentID, delete_commentID = comment.commentID, redirected = True, _external=True) }}"> [Slett]</a> 
                                     {% endif %}
                                 {% endif %} 
                             </h4> </li> 
@@ -133,7 +132,7 @@
                 {% elif content.mimetype == 'video/mp4' or content.mimetype == 'video/webm' or content.mimetype == 'video/ogg' %}
                     <div class = vid_box> 
                         <a href="{{url_for('content', id=content.contentID, _external=True) }}"> <br>
-                        <video class ='overview' width="400px" height="250px">
+                        <video class ='overview' width="400" height="250">
                         <source src="{{url_for('download_content', id=content.contentID, _external=True)}}" type="{{content.mimetype}}"></video>
                         <h4><br> {{content.title}} <br>
                             {{content.mimetype}} - {{content.date}} - {{content.users_username}} <br>

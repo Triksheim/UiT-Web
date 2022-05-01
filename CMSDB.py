@@ -278,25 +278,6 @@ class MyDb:
         except mysql.connector.Error as error:
                 print(error)
 
-    def remove_view(self, id):
-        try:
-            statement1 = """SELECT views
-                            FROM content
-                            WHERE contentID=%s
-                        """
-            parameters = (id,)
-            self.cursor.execute(statement1, parameters)
-            views = self.cursor.fetchone()
-            
-            statement2 = """UPDATE content
-                            SET views=%s
-                            WHERE contentID=%s 
-                        """
-            parameters2 = (views[0]-1, id)
-            self.cursor.execute(statement2, parameters2)    
-        except mysql.connector.Error as error:
-                print(error)
-
     def add_like(self, id):
         try:
             statement1 = """SELECT likes

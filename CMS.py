@@ -64,13 +64,6 @@ def increment_views(id):
     except:
         return
 
-# Decrements view count. Used when commenting and liking to not increase views.
-def decrement_views(id):
-    try:
-        with MyDb() as db:
-            db.remove_view(id) 
-    except:
-        return
 
 # Increments likes by contentID
 def increment_likes(id):
@@ -399,9 +392,11 @@ def edit_update():
 def content():
     id = request.args.get('id')
     delete_commentID = request.args.get('delete_commentID')
+    redirected = request.args.get('redirected')
     if id:
         try:
-            increment_views(id)
+            if not redirected:
+                increment_views(id)
             content = get_content_by_id(id)
             comments = get_comments_by_contentID(id)
             if content:
@@ -470,8 +465,7 @@ def add_comment():
                 db.add_new_comment(comment)
         except:
             print("failed adding comment")
-        decrement_views(contentID) # Removes one view before reloading to not increment views by commenting
-        return redirect(url_for('content', id=contentID, _external=True))
+        return redirect(url_for('content', id=contentID, redirected = True, _external=True))
     print("failed comment validate")
     return redirect(url_for('front', _external=True))
 
@@ -487,7 +481,7 @@ def delete_comment():
             if current_user.username == 'admin' or current_user.username == comment.users_username:
                 with MyDb() as db:
                     db.delete_comment(id)
-                    return redirect(url_for('content', id=contentID, _external=True))
+                    return redirect(url_for('content', id=contentID, redirected = True, _external=True))
         except:
             return redirect(url_for('front', _external=True))
     return redirect(url_for('front', _external=True))
@@ -569,8 +563,7 @@ def like():
     if contentID:
         try:
             increment_likes(contentID)
-            decrement_views(contentID) # Gets added back when content page reloads after liking
-            return redirect(url_for('content', id=contentID, _external=True))
+            return redirect(url_for('content', id=contentID, redirected = True, _external=True))
         except:
             return redirect(url_for('front', _external=True))
     return redirect(url_for('front', _external=True))
