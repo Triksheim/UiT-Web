@@ -32,7 +32,7 @@ csrf.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-ALLOWED_EXTENSIONS = {'txt', 'docx', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'webm', 'ogg', 'zip', 'py'}
+ALLOWED_EXTENSIONS = {'txt', 'docx', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'webm', 'ogg', 'zip', 'py', 'css', 'html'}
 
 # Checks if filename got valid extension.
 # Copy from dte-2509-webapp-v22\file_upload\fileUpload_db.py

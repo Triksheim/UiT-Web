@@ -61,6 +61,7 @@ class MyDb:
 
     def upload_content(self, content):
         try:
+            self.cursor = self.conn.cursor(buffered=True)
             statement = """ INSERT INTO content 
                             (contentID, code, title, description, date, tags, filename, mimetype, size, restriction, views, users_username)
                             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s) 
@@ -98,6 +99,7 @@ class MyDb:
 
     def get_content(self, id, restriction):
         try:
+            self.cursor = self.conn.cursor(buffered=True)
             statement = """
                             SELECT * 
                             FROM content 
@@ -113,6 +115,7 @@ class MyDb:
 
     def get_asset(self, id):
         try:
+            self.cursor = self.conn.cursor(buffered=True)
             statement = """
                             SELECT * 
                             FROM assets
@@ -127,6 +130,7 @@ class MyDb:
 
     def get_all_content(self, restriction):
         try:
+            self.cursor = self.conn.cursor(buffered=True)
             statement = """
                             SELECT * 
                             FROM content 
@@ -142,6 +146,7 @@ class MyDb:
 
     def get_all_content_order_views(self, restriction):
         try:
+            self.cursor = self.conn.cursor(buffered=True)
             statement = """ SELECT *
                             FROM content
                             WHERE restriction='open' OR restriction=%s
@@ -156,6 +161,7 @@ class MyDb:
 
     def get_all_content_order_likes(self, restriction):
         try:
+            self.cursor = self.conn.cursor(buffered=True)
             statement = """ SELECT *
                             FROM content
                             WHERE restriction='open' OR restriction=%s
@@ -171,6 +177,7 @@ class MyDb:
 
     def get_all_content_by_type(self, mimetype, restriction):
         try:
+            self.cursor = self.conn.cursor(buffered=True)
             statement = """
                             SELECT * 
                             FROM content 
@@ -186,6 +193,7 @@ class MyDb:
 
     def get_all_content_by_type_docs(self, mimetype, restriction):
         try:
+            self.cursor = self.conn.cursor(buffered=True)
             statement = """
                             SELECT * 
                             FROM content 
@@ -201,6 +209,7 @@ class MyDb:
 
     def get_all_content_by_type_order_views(self, mimetype, restriction):
         try:
+            self.cursor = self.conn.cursor(buffered=True)
             statement = """
                             SELECT * 
                             FROM content 
@@ -216,6 +225,7 @@ class MyDb:
 
     def get_all_content_by_type_order_likes(self, mimetype, restriction):
         try:
+            self.cursor = self.conn.cursor(buffered=True)
             statement = """
                             SELECT * 
                             FROM content 
@@ -231,6 +241,7 @@ class MyDb:
 
     def get_all_content_by_type_order_views_docs(self, mimetype, restriction):
         try:
+            self.cursor = self.conn.cursor(buffered=True)
             statement = """
                             SELECT * 
                             FROM content 
@@ -246,6 +257,7 @@ class MyDb:
 
     def get_all_content_by_type_order_likes_docs(self, mimetype, restriction):
         try:
+            self.cursor = self.conn.cursor(buffered=True)
             statement = """
                             SELECT * 
                             FROM content 

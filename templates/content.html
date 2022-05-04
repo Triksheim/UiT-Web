@@ -20,7 +20,15 @@
                 {% else %}
                     <h1>{{content.title}}</h1>
                     <a href ="{{url_for('download_content', id=content.contentID, _external=True)}}">
-                        <img src="{{url_for('download_asset', id=2, _external=True)}}" alt="img"/> </a>
+                    {% if content.mimetype == 'text/html' or content.mimetype == 'text/css' %}
+                        <img src="{{url_for('download_asset', id=7, _external=True)}}" alt="img"/>
+                    {% elif content.mimetype == 'application/pdf' %}
+                        <img src="{{url_for('download_asset', id=8, _external=True)}}" alt="img"/>
+                    {% elif content.mimetype == 'text/x-python' %}
+                        <img src="{{url_for('download_asset', id=9, _external=True)}}" alt="img"/>
+                    {% else %}
+                        <img src="{{url_for('download_asset', id=2, _external=True)}}" alt="img"/>
+                    {% endif %}
                 {% endif %}
                 <a href ="{{url_for('download_content', id=content.contentID, _external=True)}}">
                 <h4>Fil:{{ content.filename}} - Type:{{ content.mimetype}} - Size:{{ content.size}} bytes</h4> </a>
@@ -143,8 +151,16 @@
                 {% else %}
                     <div class = doc_box> 
                         <a href="{{url_for('content', id=content.contentID, _external=True)}}">
+                            {% if content.mimetype == 'text/html' or content.mimetype == 'text/css' %}
+                                <img src="{{url_for('download_asset', id=7, _external=True)}}" alt="img"/>
+                            {% elif content.mimetype == 'application/pdf' %}
+                                <img src="{{url_for('download_asset', id=8, _external=True)}}" alt="img"/>
+                            {% elif content.mimetype == 'text/x-python' %}
+                                <img src="{{url_for('download_asset', id=9, _external=True)}}" alt="img"/>
 
-                            <img src="{{url_for('download_asset', id=2, _external=True)}}" alt="img"/>
+                            {% else %}
+                                <img src="{{url_for('download_asset', id=2, _external=True)}}" alt="img"/>
+                            {% endif %}
                             <h4>
                             {{content.title}} <br>
                             {{content.mimetype}} - {{content.date}} - {{content.users_username}} <br>
