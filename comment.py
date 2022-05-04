@@ -3,5 +3,5 @@ class Comment:
         self.commentID = commentID
         self.text = text
         self.time = time
-        self.users_username = user
+        self.user_username = user
         self.content_contentID = contentID

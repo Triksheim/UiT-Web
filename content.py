@@ -12,5 +12,5 @@ class Content:
         self.size = size
         self.restriction = restriction
         self.views = views
-        self.users_username = user
+        self.user_username = user
         self.likes = likes

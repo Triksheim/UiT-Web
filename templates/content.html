@@ -43,7 +43,7 @@
                 {% endif %}
                 Likes: {{content.likes}} <br>
                 Dato: {{ content.date}} <br>
-                Lastet opp av: {{ content.users_username}} <br>
+                Lastet opp av: {{ content.user_username}} <br>
                 
                 {% if content.restriction == 'open' %}
                     Synlighet: Alle <br>
@@ -54,7 +54,7 @@
                 Visninger: {{content.views}}  <br>
                 Tags: {{ content.tags }}
                 
-                {% if current_user.username == 'admin' or current_user.username == content.users_username %}
+                {% if current_user.username == 'admin' or current_user.username == content.user_username %}
                     <form action="{{url_for('edit_content', _external=True)}}" method="POST">
                         <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
                         <input type="hidden" id="title" name="title" value="{{ content.title }}">
@@ -66,7 +66,7 @@
                         <input type="hidden" id="size" name="size" value="{{ content.size }}">
                         <input type="hidden" id="date" name="date" value="{{ content.date }}">
                         <input type="hidden" id="contentID" name="contentID" value="{{ content.contentID }}">
-                        <input type="hidden" id="owner" name="owner" value="{{ content.users_username }}">
+                        <input type="hidden" id="owner" name="owner" value="{{ content.user_username }}">
                         {{content_form.submit_edit}}
                     </form>
                 {% endif %}
@@ -91,8 +91,8 @@
                             <div class="comment_text">
                                 <h7>{{comment.text}}</h7>
                             </div>
-                            <h4>{{comment.users_username}} - {{comment.time}} 
-                                {% if current_user.username == 'admin' or current_user.username == comment.users_username %} 
+                            <h4>{{comment.user_username}} - {{comment.time}} 
+                                {% if current_user.username == 'admin' or current_user.username == comment.user_username %} 
                                     {% if delete_commentID == comment.commentID %}
                                         <span style="color: red;">[<a href = "{{url_for('delete_comment', id=comment.commentID, contentID = comment.content_contentID, _external=True) }}">Bekreft sletting</a>]</span> 
                                     {% else %}
@@ -132,7 +132,7 @@
                         <a href="{{url_for('content', id=content.contentID, _external=True) }}">  
                         <img src="{{url_for('download_content', id=content.contentID, _external=True)}}" alt="img"/>
                         <h4>{{content.title}} <br>
-                            {{content.mimetype}} - {{content.date}} - {{content.users_username}} <br>
+                            {{content.mimetype}} - {{content.date}} - {{content.user_username}} <br>
                             Likes: {{content.likes}} - Visninger: {{ content.views }}</h4>
                         </a>
                     </div>
@@ -143,7 +143,7 @@
                         <video class ='overview' width="400" height="250">
                         <source src="{{url_for('download_content', id=content.contentID, _external=True)}}" type="{{content.mimetype}}"></video>
                         <h4><br> {{content.title}} <br>
-                            {{content.mimetype}} - {{content.date}} - {{content.users_username}} <br>
+                            {{content.mimetype}} - {{content.date}} - {{content.user_username}} <br>
                             Likes: {{content.likes}} - Visninger: {{ content.views }}</h4>
                         </a> 
                     </div>
@@ -163,7 +163,7 @@
                             {% endif %}
                             <h4>
                             {{content.title}} <br>
-                            {{content.mimetype}} - {{content.date}} - {{content.users_username}} <br>
+                            {{content.mimetype}} - {{content.date}} - {{content.user_username}} <br>
                             Likes: {{content.likes}} - Visninger: {{ content.views }}</h4>
                         </a>
                     </div>

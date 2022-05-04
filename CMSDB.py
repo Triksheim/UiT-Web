@@ -27,7 +27,7 @@ class MyDb:
 
     def add_new_user(self, user):
         try:
-            statement = """ INSERT INTO users (username, email, password, firstname, lastname, uuid, activated)
+            statement = """ INSERT INTO user (username, email, password, firstname, lastname, uuid, activated)
                             VALUES (%s, %s, %s, %s, %s, %s, %s) 
                         """
             self.cursor.execute(statement, user)
@@ -38,7 +38,7 @@ class MyDb:
     def get_user(self, username):
         try:
             statement = """ SELECT * 
-                            FROM users 
+                            FROM user 
                             WHERE username=(%s)
                         """
             parameters = (username,)
@@ -50,7 +50,7 @@ class MyDb:
     
     def activate_user(self, id):
         try:
-            statement = """ UPDATE users 
+            statement = """ UPDATE user 
                             SET activated = 1
                             WHERE uuid = %s
                         """
@@ -63,7 +63,7 @@ class MyDb:
         try:
             self.cursor = self.conn.cursor(buffered=True)
             statement = """ INSERT INTO content 
-                            (contentID, code, title, description, date, tags, filename, mimetype, size, restriction, views, users_username)
+                            (contentID, code, title, description, date, tags, filename, mimetype, size, restriction, views, user_username)
                             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s) 
                         """
             self.cursor.execute(statement, content)
@@ -118,7 +118,7 @@ class MyDb:
             self.cursor = self.conn.cursor(buffered=True)
             statement = """
                             SELECT * 
-                            FROM assets
+                            FROM asset
                             WHERE id=%s
                         """
             parameters = (id,)
@@ -312,7 +312,7 @@ class MyDb:
 
     def add_new_comment(self, comment):
         try:
-            statement = """ INSERT INTO comments (commentID, text, time, users_username, content_contentID)
+            statement = """ INSERT INTO comment (commentID, text, time, user_username, content_contentID)
                             VALUES (%s, %s, %s, %s, %s) 
                         """
             self.cursor.execute(statement, comment)
@@ -322,7 +322,7 @@ class MyDb:
 
     def delete_comment(self, id):
         try:
-            statement = """ DELETE FROM comments
+            statement = """ DELETE FROM comment
                             WHERE commentID = (%s)
                         """
             parameters = (id,)
@@ -334,7 +334,7 @@ class MyDb:
     def get_comments_by_contentID(self, id):
         try:
             statement = """ SELECT * 
-                            FROM comments 
+                            FROM comment
                             WHERE content_contentID=(%s) 
                             ORDER BY time DESC
                         """
@@ -348,7 +348,7 @@ class MyDb:
     def get_comment_by_id(self, id):
         try:
             statement = """ SELECT * 
-                            FROM comments 
+                            FROM comment
                             WHERE commentID=(%s)
                         """
             parameters = (id,)
