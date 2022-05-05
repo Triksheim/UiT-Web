@@ -12,8 +12,7 @@ from flask_mail import Mail, Message
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
-from datetime import date, datetime
-import secrets
+from datetime import datetime
 import base64
 import uuid
 import random
@@ -23,8 +22,7 @@ app = Flask(__name__)
 app.config['MAIL_SERVER'] = 'smtpserver.uit.no'
 app.config['MAIL_PORT'] = 587
 app.config['MAX_CONTENT_LENGTH'] = 16777215 * 2
-#app.secret_key = secrets.token_urlsafe(16)
-app.secret_key = 'veldighemmelig'
+app.secret_key = 'P9DKAWBbc4R9hH6vNPJXvQ'
 
 csrf = CSRFProtect()
 csrf.init_app(app)
@@ -52,7 +50,7 @@ def send_mail(id, email):
     mail = Mail(app)
     msg = Message('Aktiver din bruker', sender='tri032@uit.no', recipients=[email])
     msg.body = 'Plain text body'
-    msg.html = '<b>Bekreft epostadresse </b>' + '<a href="127.0.0.1:5000/activate?id=' + id + '">Klikk her</a>'
+    msg.html = '<b>Bekreft epostadresse </b>' + '<a href="kark.uit.no/~tri032/flask_prosjekt/activate?id=' + id + '">Klikk her</a>'
     with app.app_context():
       mail.send(msg)
 
@@ -322,14 +320,14 @@ def select_file():
 def upload_file():
     content_form = ContentForm(request.form)
 
-    if request.method == "POST" and content_form.validate():
+    if request.method == "POST" and content_form.validate() and allowed_file(content_form.filename.data):
         id = str(uuid.uuid1())
         code = eval(content_form.filedata.data)
         title = content_form.title.data
         description = content_form.description.data
         upload_date = datetime.now()
         tags = content_form.tags.data
-        filename = content_form.filename.data
+        filename = secure_filename(content_form.filename.data)
         mimetype = content_form.mimetype.data
         size = len(code)
         restriction = content_form.restriction.data
@@ -478,7 +476,7 @@ def delete_comment():
     if id:
         try:
             comment = get_comment_by_id(id)
-            if current_user.username == 'admin' or current_user.username == comment.users_username:
+            if current_user.username == 'admin' or current_user.username == comment.user_username:
                 with MyDb() as db:
                     db.delete_comment(id)
                     return redirect(url_for('content', id=contentID, redirected = True, _external=True))
@@ -549,7 +547,7 @@ def search():
                 all_contents = get_all_content()
             found_content = []
             for content in all_contents:
-                if text in content.tags.lower() or text in content.title.lower() or text == content.users_username.lower():
+                if text in content.tags.lower() or text in content.title.lower() or text == content.user_username.lower():
                     found_content.append(content)
             return render_template('content.html', login_form = LoginForm(), contents = found_content, text = text)
         except:
