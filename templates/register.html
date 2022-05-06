@@ -12,57 +12,90 @@
                 <div class = "brukernavn">
                     <p>
                     {{form.username.label}}<br>
-                    {{  form.username(size=16)  }}<br> 
+                    {{  form.username(size=20)  }} 
                     {% for error in form.username.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
                     </p>
                 </div>
 
-                <div class = "passord">
-                    <p>
-                    {{form.password.label}}<br>
-                    {{form.password(size=16)}}<br>
-                    {% for error in form.password.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                    </p>
+                <div class="name">
+
+                    <div class = "firstname">
+                        <p>
+                        {{form.firstname.label}}<br>
+                        {{form.firstname(size=20)}}
+                        {% for error in form.firstname.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                        </p>
+                    </div>
+
+                    <div class = "lastname">
+                        <p>
+                        {{form.lastname.label}}<br>
+                        {{form.lastname(size=20)}}
+                        {% for error in form.lastname.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                        </p>
+                    </div>
+                    <br style="clear:both" />
                 </div>
+
+                <div class="password">
+
+                    <div class = "pw">
+                        <p>
+                        {{form.password.label}}<br>
+                        {{form.password(size=20)}}
+                        {% for error in form.password.errors %} 
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                        </p>
+                    </div>
+
+                    <div class = "pw_val">
+                        <p>
+                        {{form.password_val.label}}<br>
+                        {{form.password_val(size=20)}} 
+                        {% for error in form.password_val.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                        </p>
+                    </div>
+                    <br style="clear:both" />
+                 </div>
 
                 <div class = "email">
-                    <p>
-                    {{form.email.label}}<br>
-                    {{form.email(size=16)}}<br> 
-                    {% for error in form.email.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                    </p>
+                    <div class = "mail">
+
+                        <p>
+                        {{form.email.label}}<br>
+                        {{form.email(size=25)}}<br> 
+                        {% for error in form.email.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                        </p>
+                    </div>
+
+                    <div class = "mail_val">
+                        <p>
+                        {{form.email_val.label}}<br>
+                        {{form.email_val(size=25)}}<br> 
+                        {% for error in form.email_val.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                        </p>
+                    </div>
+                    <br style="clear:both" />
                 </div>
 
-                <div class = "fornavn">
-                    <p>
-                    {{form.firstname.label}}<br>
-                    {{form.firstname(size=16)}}<br>
-                    {% for error in form.firstname.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                    </p>
-                </div>
-
-                <div class = "etternavn">
-                    <p>
-                    {{form.lastname.label}}<br>
-                    {{form.lastname(size=16)}}<br> 
-                    {% for error in form.lastname.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                    </p>
-                </div>
-              
+               
                 {% if error %}
                 <span style="color: red;">[{{ error }}]</span>
                 {% endif %}
-                <br>
+                
                 <p>{{ form.submit }}</p> 
             
             </form>

@@ -216,6 +216,10 @@ def register():
     form = UserForm(request.form)
     
     if request.method == "POST" and form.validate():
+        if form.password.data != form.password_val.data:
+            return render_template('register.html', login_form = LoginForm(), form = form, error = 'Passordene er ulike')
+        if form.email.data != form.email_val.data:
+            return render_template('register.html', login_form = LoginForm(), form = form, error = 'Epostadressene er ulike')
         username = form.username.data
         email = form.email.data
         password = generate_password_hash(form.password.data) #hashes password with sha-256

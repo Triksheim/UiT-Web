@@ -187,8 +187,46 @@ h1 {
 .register_user {
     padding-top: 10em;
     margin-left: 5em;
+    width: 100%;
 }
 
+.password{
+    
+}
+
+.pw{
+    
+    float: left; 
+}
+
+.pw_val{
+    padding-left: 3em;
+    float: left; 
+    
+}
+
+.email{
+}
+
+.mail{  
+    
+    float: left;
+}
+
+.mail_val{
+    padding-left: 1em;
+    float: left; 
+}
+
+
+.firstname{
+    float: left
+}
+
+.lastname{
+    padding-left: 3em;
+    float: left
+}
 .upload {   
     padding-top: 7em;
     margin-left: 5em;

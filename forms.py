@@ -11,8 +11,10 @@ class LoginForm(Form):
 
 class UserForm(Form):
     username = StringField('Brukernavn', validators=[DataRequired(), Length(max=45)])
-    email = EmailField('Epost', validators=[DataRequired(), Length(max=45)])
+    email = EmailField('Epost', validators=[DataRequired(), Length(max=320)])
+    email_val = EmailField('Bekreft epost', validators=[DataRequired(), Length(max=320)])
     password = PasswordField('Passord', validators=[DataRequired(), Length(max=45)])
+    password_val = PasswordField('Bekreft passord', validators=[DataRequired(), Length(max=45)])
     firstname = StringField('Fornavn', [DataRequired(), Length(max=45)])
     lastname = StringField('Etternavn', [DataRequired(), Length(max=45)])
     submit = SubmitField('Registrer')
