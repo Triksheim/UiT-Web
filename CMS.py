@@ -199,6 +199,7 @@ def get_comment_by_id(id):
 def front():
     AMOUNT_TO_SHOW = 4
     contents = get_all_content()
+    error = request.args.get('error')
     random_numbers = []
     while len(random_numbers) < AMOUNT_TO_SHOW and len(random_numbers) != len(contents):
         num = random.randrange(0, len(contents))
@@ -208,7 +209,7 @@ def front():
     for number in random_numbers:
         random_content.append(contents[number])
 
-    return render_template('content.html', login_form = LoginForm(), contents = random_content, frontpage = True)
+    return render_template('content.html', login_form = LoginForm(), contents = random_content, frontpage = True, error = error)
 
 # Register a new user
 @app.route('/register', methods = ["GET", "POST"])
@@ -278,7 +279,12 @@ def login():
                     if user.activated == 1:
                         if user.check_password(password):
                             login_user(user, remember=True)
-                return redirect(url_for('front', _external=True))
+                        else:
+                            return redirect(url_for('front', error = 'Feil passord', _external=True))
+                    else:
+                        return redirect(url_for('front', error = 'Bruker ikke aktivert', _external=True))
+                else:
+                    return redirect(url_for('front', error = 'Ukjent bruker', _external=True))
         except:
             return redirect(url_for('front', _external=True))
     return redirect(url_for('front', _external=True))
