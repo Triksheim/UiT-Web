@@ -3,7 +3,7 @@ body {
     color: black;
     font-family: 'Verdana', sans-serif;
     margin: 0em; 
-}
+    }
 
 h1 {
     color: #212122;
@@ -67,10 +67,8 @@ h1 {
   }
 
   img.like{
-    
     width: 35px;
     height: 35px;
-   
   }
 
 
@@ -128,7 +126,6 @@ h1 {
 .front_header {
     margin-top: 8em;
     margin-left: 3em;
-
 }
 
 .category {
@@ -154,9 +151,6 @@ h1 {
     width: 30%;
     margin-top: 0em;
     margin-right: 0em; 
-}
-
-.buttons{
 }
 
 .login_btn {
@@ -190,26 +184,16 @@ h1 {
     width: 100%;
 }
 
-.password{
-    
-}
-
 .pw{
-    
     float: left; 
 }
 
 .pw_val{
     padding-left: 3em;
-    float: left; 
-    
-}
-
-.email{
+    float: left;  
 }
 
 .mail{  
-    
     float: left;
 }
 
@@ -217,7 +201,6 @@ h1 {
     padding-left: 1em;
     float: left; 
 }
-
 
 .firstname{
     float: left
@@ -248,9 +231,6 @@ h1 {
     margin-left: 5em;
  }
 
- .videoplayer {
- }
-
  .comments li{
     list-style-type: none;
     width: 40%;
@@ -260,7 +240,6 @@ h1 {
 .comment_text{
     white-space: pre-line;
 }
-
 
 a:link {
     color: rgb(0, 0, 0);

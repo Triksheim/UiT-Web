@@ -18,7 +18,7 @@ import uuid
 import random
 
 app = Flask(__name__)
-#app.config['SERVER_NAME'] = 'kark.uit.no'
+app.config['SERVER_NAME'] = 'kark.uit.no'
 app.config['MAIL_SERVER'] = 'smtpserver.uit.no'
 app.config['MAIL_PORT'] = 587
 app.config['MAX_CONTENT_LENGTH'] = 16777215 * 2
@@ -45,7 +45,7 @@ def load_user(username):
         user = User(*db.get_user(username))
     return user
 
-# Sends email with activation code
+# Sends email with user id as activation code
 def send_mail(id, email):
     mail = Mail(app)
     msg = Message('Aktiver din bruker', sender='tri032@uit.no', recipients=[email])
@@ -62,8 +62,7 @@ def increment_views(id):
     except:
         return
 
-
-# Increments likes by contentID
+# Increments likes for contentID
 def increment_likes(id):
     try:
         with MyDb() as db:
@@ -121,13 +120,13 @@ def get_content_by_type_ordered(mimetype, column):
     try:     
         if 'application%' in mimetype or 'text%' in mimetype:
             with MyDb() as db:
-                    if column == 'date':
-                        result = db.get_all_content_by_type_docs(mimetype, restriction)
-                    elif column == 'views':
-                        result = db.get_all_content_by_type_order_views_docs(mimetype, restriction)
-                    elif column == 'likes':
-                        result = db.get_all_content_by_type_order_likes_docs(mimetype, restriction)
-                    contents = [Content(*x) for x in result]
+                if column == 'date':
+                    result = db.get_all_content_by_type_docs(mimetype, restriction)
+                elif column == 'views':
+                    result = db.get_all_content_by_type_order_views_docs(mimetype, restriction)
+                elif column == 'likes':
+                    result = db.get_all_content_by_type_order_likes_docs(mimetype, restriction)
+                contents = [Content(*x) for x in result]
         else:
             with MyDb() as db:
                 if column == 'date':
@@ -296,7 +295,7 @@ def logout():
     logout_user()
     return redirect(url_for('front', _external=True))
 
-# Add file and information for content upload
+# Select a file for content upload
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
 def select_file():
@@ -428,7 +427,7 @@ def content():
         except:
             return redirect(url_for('front', _external=True))
 
-# Downloads content by id to display in browser using make_response.
+# Download content by id to display in browser using make_response.
 @app.route('/download/<id>', methods=['GET', 'POST'])
 def download_content(id):
     if id:
@@ -442,7 +441,7 @@ def download_content(id):
             return redirect(url_for('front', _external=True))
     return redirect(url_for('front', _external=True))
     
-# Downloads content by id to display in browser using make_response.
+# Download asset.
 @app.route('/asset/<id>', methods=['GET', 'POST'])
 def download_asset(id):
     if id:
@@ -457,7 +456,7 @@ def download_asset(id):
     return redirect(url_for('front', _external=True))
 
 
-# Adds comment linked to contentID to db when form is validated
+# Adds a new comment. Linked to a contentID
 @app.route('/comment', methods=['POST'])
 def add_comment():
     comment_form = CommentForm(request.form)
@@ -564,6 +563,7 @@ def search():
             return redirect(url_for('front', _external=True))
     return redirect(url_for('front', _external=True))
 
+# Giving likes to content
 @app.route('/like', methods=['GET'])
 @login_required
 def like():
@@ -577,4 +577,4 @@ def like():
     return redirect(url_for('front', _external=True))
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

@@ -1,13 +1,12 @@
 from wtforms import Form
-from wtforms.validators import DataRequired, Length, NumberRange
-from wtforms.fields import TextAreaField, HiddenField, IntegerField, StringField, SubmitField, EmailField, PasswordField
+from wtforms.validators import DataRequired, Length
+from wtforms.fields import TextAreaField, HiddenField, StringField, SubmitField, EmailField, PasswordField
 from flask_wtf.file import FileField
 
-
 class LoginForm(Form):
-    username = StringField('Brukernavn:', validators=[DataRequired(), Length(max=45)])
-    password = PasswordField('Passord:', validators=[DataRequired(), Length(max=45)])
-    submit = SubmitField('Logg inn')
+    username = StringField(label='Brukernavn:', id='username_login', validators=[DataRequired(), Length(max=45)])
+    password = PasswordField(label='Passord:', id='password_login', validators=[DataRequired(), Length(max=45)])
+    submit_login = SubmitField('Logg inn')
 
 class UserForm(Form):
     username = StringField('Brukernavn', validators=[DataRequired(), Length(max=45)])
@@ -17,7 +16,7 @@ class UserForm(Form):
     password_val = PasswordField('Bekreft passord', validators=[DataRequired(), Length(max=45)])
     firstname = StringField('Fornavn', [DataRequired(), Length(max=45)])
     lastname = StringField('Etternavn', [DataRequired(), Length(max=45)])
-    submit = SubmitField('Registrer')
+    submit_reg = SubmitField('Registrer')
     
 
 class ContentForm(Form):
@@ -37,11 +36,11 @@ class ContentForm(Form):
     owner = HiddenField()
 
     submit_next = SubmitField('Neste')
-    submit = SubmitField('Last opp')
+    submit_upload = SubmitField('Last opp')
     submit_edit = SubmitField('Rediger')
 
 class CommentForm(Form):
     text = TextAreaField('Kommentar', validators= [DataRequired(), Length(max=500)])
     contentID = HiddenField()
-    submit = SubmitField('Kommenter')
+    submit_comment = SubmitField('Kommenter')
 

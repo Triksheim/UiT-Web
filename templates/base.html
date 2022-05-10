@@ -43,17 +43,18 @@
 
         {% else %}
           <div class="login_area">
-            <div class="login">
+            
               <form action="{{url_for('login', _external=True)}}" method="POST">
-                <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="login">
+                  <input type="hidden" id="csrf_token_login" name="csrf_token" value="{{ csrf_token() }}">
                   {{login_form.username.label}}
                   {{login_form.username}}
                   {{login_form.password.label}}
                   {{login_form.password}}
-            </div>
-              <div class="buttons">
+                </div>
+              
                 <div class="login_btn">
-                  {{login_form.submit()}}
+                  {{login_form.submit_login()}}
                 </div>
                 </form>
               <div class="new_btn">
@@ -61,8 +62,7 @@
                   <input type="submit"  value="Registrer"> 
                 </form>
               </div>
-            </div>
-            
+              
           {% if error %}
             <br style="clear:both" />
             <span style="color: red;">[{{ error }}]</span>

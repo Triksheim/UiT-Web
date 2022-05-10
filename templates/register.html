@@ -7,7 +7,7 @@
         <h1>Registrer ny bruker</h1>
         <div class = "userform">
             <form action="{{url_for('register', _external=True)}}" method="POST">
-                <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" id="csrf_token_reg" name="csrf_token" value="{{ csrf_token() }}">
                 
                 <div class = "brukernavn">
                     <p>
@@ -96,7 +96,7 @@
                 <span style="color: red;">[{{ error }}]</span>
                 {% endif %}
                 
-                <p>{{ form.submit }}</p> 
+                <p>{{ form.submit_reg }}</p> 
             
             </form>
         </div>        

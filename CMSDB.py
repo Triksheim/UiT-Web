@@ -1,7 +1,6 @@
 import mysql.connector
 
 class MyDb:
-
     def __init__(self) -> None:
         dbconfig = {'host': 'kark.uit.no',
                     'user': 'stud_v22_riksheimtor',
@@ -23,7 +22,6 @@ class MyDb:
         self.cursor.execute(sql)
         result = self.cursor.fetchall()
         return result
-
 
     def add_new_user(self, user):
         try:
@@ -94,8 +92,6 @@ class MyDb:
         except mysql.connector.Error as error:
             print(error)
         return result
-
-
 
     def get_content(self, id, restriction):
         try:
@@ -173,7 +169,6 @@ class MyDb:
         except mysql.connector.Error as error:
             print(error)
         return result
-
 
     def get_all_content_by_type(self, mimetype, restriction):
         try:
@@ -308,7 +303,6 @@ class MyDb:
             self.cursor.execute(statement2, parameters2)    
         except mysql.connector.Error as error:
                 print(error)
-
 
     def add_new_comment(self, comment):
         try:
